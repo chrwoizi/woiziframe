@@ -1,6 +1,22 @@
 # Woiziframe
 
-Based on [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame)
+This web application displays photos from disk.
+
+Features:
+
+- A new photo is selected randomly every few seconds.
+
+- The screen size is limited to a 4/3 ratio.
+
+- The photo is resized to fit the screen. The remaining screen space is filled with a blurred variant of the image.
+
+- The album title is shown at the bottom of the screen.
+
+- A button toggles the fullscreen browser mode.
+
+![screenshot](docs/screenshot.png)
+
+This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.4.
 
