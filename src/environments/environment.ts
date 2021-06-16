@@ -2,6 +2,7 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { secretEnvironment } from './environment.secret';
 import { sharedEnvironment } from './environment.shared';
 
 export const environment = {
@@ -9,6 +10,9 @@ export const environment = {
   production: false,
   interval: 5000,
   mockWeather: false,
+  basePath: secretEnvironment.basePath,
+  whitelist: secretEnvironment.whitelist,
+  blacklist: secretEnvironment.blacklist,
 };
 
 /*
