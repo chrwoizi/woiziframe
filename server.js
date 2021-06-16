@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const server = express();
 
-const basePath = 'F:\\Bilder';
-const whitelist = ['2007 SEP', '2010-b Vatertag', '2011-09-17 Männerevent', '2013-07-20 Männerevent'];
-const blacklist = [];
+const basePath = environment.basePath;
+const whitelist = environment.whitelist;
+const blacklist = environment.blacklist;
 const extensions = ['.jpg', '.jpeg', '.png', '.tif', '.tiff'];
 
 function findFiles(dir) {
