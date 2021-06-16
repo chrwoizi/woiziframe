@@ -26,9 +26,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `mpn start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `cd client; npm start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Run `npm run server` for a backend server. Navigate to `http://localhost:4201/albums` or `http://localhost:4201/files?album=[albumname]` or `http://localhost:4201/file/[albumname]/[filename]`.
+Run `cd server; npm start` for a backend server. Navigate to `http://localhost:4201/albums` or `http://localhost:4201/files?album=[albumname]` or `http://localhost:4201/file/[albumname]/[filename]`.
 
 ## Code scaffolding
 
