@@ -2,9 +2,13 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { sharedEnvironment } from './environment.shared';
+
 export const environment = {
+  ...sharedEnvironment,
   production: false,
   interval: 5000,
+  mockWeather: true,
 };
 
 /*
