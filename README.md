@@ -10,6 +10,10 @@ Features:
 
 - The photo is resized to fit the screen. The remaining screen space is filled with a blurred variant of the image.
 
+- The current weather and tomorrow's weather are shown as icon and temperature
+
+- The current time and date is shown.
+
 - The album title is shown at the bottom of the screen.
 
 - A button toggles the fullscreen browser mode.
