@@ -7,6 +7,8 @@ export const sharedEnvironment = {
   maxCrop: 0.34,
 
   openWeatherApiKey: secretEnvironment.openWeatherApiKey,
+  weatherRefreshIntervalMinutes: 10,
+
   locationLatitude: 52.477093,
   locationLongitude: 10.090432,
 };
