@@ -16,7 +16,7 @@ Features:
 
 ![screenshot](docs/screenshot.png)
 
-This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame)
+This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame) and [krzysztofsaja/angular-weather-widget](https://github.com/krzysztofsaja/angular-weather-widget)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.4.
 
