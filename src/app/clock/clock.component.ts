@@ -10,7 +10,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-clock',
   templateUrl: './clock.component.html',
-  styleUrls: ['./clock.component.css'],
+  styleUrls: ['./clock.component.scss'],
 })
 export class ClockComponent implements AfterViewInit {
   @ViewChild('sec')

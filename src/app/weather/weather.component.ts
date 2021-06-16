@@ -5,7 +5,7 @@ import { WeatherRestService } from '../shared/weather/weather-rest.service';
 @Component({
   selector: 'app-weather',
   templateUrl: './weather.component.html',
-  styleUrls: ['./weather.component.css'],
+  styleUrls: ['./weather.component.scss'],
 })
 export class WeatherComponent implements OnInit {
   weather?: Weather;
