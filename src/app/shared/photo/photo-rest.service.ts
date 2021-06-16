@@ -41,8 +41,8 @@ export class PhotoRestService {
       baseUrl: '/api/file/' + x,
       id: x,
       mediaMetadata: {
-        width: '1',
-        height: '1',
+        width: undefined,
+        height: undefined,
       },
     };
   }

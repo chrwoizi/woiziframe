@@ -4,8 +4,8 @@ export interface Album {
 }
 
 export interface MediaMetadata {
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 
 export interface PhotosResponse {

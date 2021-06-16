@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  AfterViewInit,
+  ViewChild,
+} from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { PhotoQueueService } from './shared/photo/photo-queue.service';
 import { MediaItem } from './shared/photo/types';
@@ -9,17 +15,18 @@ import { Deferred } from './shared/utils/deferred';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss', './spinner.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
   loading = true;
   items: DataItem[] = [];
   activeItem?: DataItem;
   nextItemLoadStatus = new Deferred();
   onlineStatus = new Deferred();
   isInFullscreen = false;
+  @ViewChild('page') page!: ElementRef;
 
   constructor(private photoQueueService: PhotoQueueService) {}
 
-  async ngOnInit() {
+  async ngAfterViewInit() {
     this.onlineStatus.resolve();
     localStorage.clear();
     this.initPhotoQueue();
@@ -66,6 +73,71 @@ export class AppComponent implements OnInit {
   isContainType = (item: DataItem): boolean =>
     item.ratioType === RatioType.contain;
 
+  getPhotoRatio(mediaItem: MediaItem) {
+    if (!mediaItem) {
+      return RatioType.default;
+    }
+
+    const { width, height } = mediaItem.photo.mediaMetadata;
+    if (typeof width === 'undefined' || typeof height === 'undefined') {
+      return undefined;
+    }
+
+    return +width / +height;
+  }
+
+  getImageLeft(item: DataItem): number | undefined {
+    if (item.ratioType !== RatioType.contain) {
+      return undefined;
+    }
+
+    const photoRatio = this.getPhotoRatio(item.mediaItem);
+    if (photoRatio && photoRatio >= 1) {
+      // landscape
+      return -(100 * environment.maxCrop) / 2;
+    }
+    return undefined;
+  }
+
+  getImageTop(item: DataItem): number | undefined {
+    if (item.ratioType !== RatioType.contain) {
+      return undefined;
+    }
+
+    const photoRatio = this.getPhotoRatio(item.mediaItem);
+    if (photoRatio && photoRatio < 1) {
+      // portrait
+      return -(100 * environment.maxCrop) / 2;
+    }
+    return undefined;
+  }
+
+  getImageWidth(item: DataItem): number | undefined {
+    if (item.ratioType !== RatioType.contain) {
+      return undefined;
+    }
+
+    const photoRatio = this.getPhotoRatio(item.mediaItem);
+    if (photoRatio && photoRatio >= 1) {
+      // landscape
+      return 100 + environment.maxCrop * 100;
+    }
+    return undefined;
+  }
+
+  getImageHeight(item: DataItem): number | undefined {
+    if (item.ratioType !== RatioType.contain) {
+      return undefined;
+    }
+
+    const photoRatio = this.getPhotoRatio(item.mediaItem);
+    if (photoRatio && photoRatio < 1) {
+      // portrait
+      return 100 + environment.maxCrop * 100;
+    }
+    return undefined;
+  }
+
   toggleFullScreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -107,20 +179,31 @@ export class AppComponent implements OnInit {
     return photo.baseUrl;
   }
 
-  private get windowRatio() {
-    return window.innerWidth / window.innerHeight;
-  }
-
   private getRatioType(mediaItem: MediaItem) {
-    if (!mediaItem) {
+    const photoRatio = this.getPhotoRatio(mediaItem);
+    if (!photoRatio) {
       return RatioType.default;
     }
-    const { width, height } = mediaItem.photo.mediaMetadata;
-    const photoRatio = +width / +height;
 
-    if (Math.abs(this.windowRatio - photoRatio) > 0.25) {
+    const page = this.page.nativeElement as HTMLDivElement;
+    const pageHeight = page.offsetHeight;
+    const pageWidth = page.offsetWidth;
+
+    let crop;
+    if (photoRatio >= 1) {
+      // landscape
+      const scaledWidth = pageHeight * photoRatio;
+      crop = scaledWidth / pageWidth - 1;
+    } else {
+      // portrait
+      const scaledHeight = pageWidth / photoRatio;
+      crop = scaledHeight / pageHeight - 1;
+    }
+
+    if (crop > environment.maxCrop) {
       return RatioType.contain;
     }
+
     return RatioType.default;
   }
 
