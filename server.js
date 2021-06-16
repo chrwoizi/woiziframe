@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const server = express();
 
-const basePath = 'F:\\Bilder';
+const basePath = 'F:\\Bilder\\Bilderrahmen';
 const extensions = ['.jpg', '.jpeg', '.png', '.tif', '.tiff'];
 
 server.get('/albums', (req, res) => {
