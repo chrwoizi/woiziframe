@@ -2,7 +2,7 @@
   <div class="spinner"></div>
 </div>
 
-<div class="page" *ngIf="!loading">
+<div class="page" #page *ngIf="!loading">
   <div class="images-container">
     <div
       class="image-container"
@@ -17,6 +17,10 @@
       <img
         class="image"
         [class.image--contain]="isContainType(item)"
+        [style.left.%]="getImageLeft(item)"
+        [style.top.%]="getImageTop(item)"
+        [style.width.%]="getImageWidth(item)"
+        [style.height.%]="getImageHeight(item)"
         [src]="item.photoUrl"
         #image
         (error)="onImageError(item)"
