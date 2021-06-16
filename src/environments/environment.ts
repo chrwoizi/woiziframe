@@ -8,7 +8,7 @@ export const environment = {
   ...sharedEnvironment,
   production: false,
   interval: 5000,
-  mockWeather: true,
+  mockWeather: false,
 };
 
 /*
