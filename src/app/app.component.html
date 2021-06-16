@@ -18,8 +18,9 @@
         class="image"
         [class.image--contain]="isContainType(item)"
         [src]="item.photoUrl"
+        #image
         (error)="onImageError(item)"
-        (load)="onImageLoad(item)"
+        (load)="onImageLoad(item, image)"
         alt=""
       />
     </div>

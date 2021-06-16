@@ -41,7 +41,11 @@ export class AppComponent implements OnInit {
     setTimeout(() => this.nextItem(), environment.interval);
   }
 
-  onImageLoad(item: DataItem) {
+  onImageLoad(item: DataItem, image: HTMLImageElement) {
+    item.mediaItem.photo.mediaMetadata.width = image.naturalWidth.toString();
+    item.mediaItem.photo.mediaMetadata.height = image.naturalHeight.toString();
+    this.updateRatioType(item);
+
     if (this.activeItem !== item) {
       this.nextItemLoadStatus.resolve();
     }
@@ -120,10 +124,12 @@ export class AppComponent implements OnInit {
     return RatioType.default;
   }
 
+  private updateRatioType(item: DataItem) {
+    item.ratioType = this.getRatioType(item.mediaItem);
+  }
+
   private updateRatioTypes() {
-    this.items.forEach(
-      (item) => (item.ratioType = this.getRatioType(item.mediaItem))
-    );
+    this.items.forEach((item) => this.updateRatioType(item));
   }
 
   @HostListener('window:resize')
