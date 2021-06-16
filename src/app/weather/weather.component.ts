@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { iconCodes, Weather } from '../shared/weather/types';
 import { WeatherRestService } from '../shared/weather/weather-rest.service';
 
@@ -7,13 +8,28 @@ import { WeatherRestService } from '../shared/weather/weather-rest.service';
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.scss'],
 })
-export class WeatherComponent implements OnInit {
+export class WeatherComponent implements OnInit, OnDestroy {
   weather?: Weather;
+  private refreshInterval?: any;
 
   constructor(private weatherRestService: WeatherRestService) {}
 
-  async ngOnInit(): Promise<void> {
-    this.weather = await this.weatherRestService.get();
+  ngOnInit() {
+    this.refreshInterval = setInterval(
+      () => this.refresh(),
+      environment.weatherRefreshIntervalMinutes * 60 * 1000
+    );
+    this.refresh();
+  }
+
+  ngOnDestroy() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  refresh() {
+    this.weatherRestService.get().then((x) => (this.weather = x));
   }
 
   getIconUrl(icon: string): string | undefined {
