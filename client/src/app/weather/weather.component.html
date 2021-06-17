@@ -6,19 +6,32 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons-wind.min.css"
 />
-<div class="flex flex-row flex-start">
-  <div class="flex flex-column flex-center current">
+<div class="flex flex-column flex-start">
+  <div class="flex flex-column flex-start current">
     <app-weather-icon
       [iconImageUrl]="getCurrentIconUrl()"
       [iconClass]="getCurrentIconClass()"
     ></app-weather-icon>
+    <!-- <div class="date">Jetzt</div> -->
     <div class="temperature">{{ getCurrentTemperature() }}</div>
+    <div class="rain">{{ getCurrentRain() }}</div>
   </div>
-  <div class="flex flex-column flex-center tomorrow">
+  <div class="flex flex-column flex-start day" *ngIf="isMorning()">
     <app-weather-icon
-      [iconImageUrl]="getTomorrowsIconUrl()"
-      [iconClass]="getTomorrowsIconClass()"
+      [iconImageUrl]="getDayIconUrl(0)"
+      [iconClass]="getDayIconClass(0)"
     ></app-weather-icon>
-    <div class="temperature">{{ getTomorrowsTemperature() }}</div>
+    <div class="date">{{ getDate(0) }}</div>
+    <div class="temperature">{{ getDayTemperature(0) }}</div>
+    <div class="rain">{{ getDayRain(0) }}</div>
+  </div>
+  <div class="flex flex-column flex-start day">
+    <app-weather-icon
+      [iconImageUrl]="getDayIconUrl(1)"
+      [iconClass]="getDayIconClass(1)"
+    ></app-weather-icon>
+    <div class="date">{{ getDate(1) }}</div>
+    <div class="temperature">{{ getDayTemperature(1) }}</div>
+    <div class="rain">{{ getDayRain(1) }}</div>
   </div>
 </div>

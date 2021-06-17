@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import * as moment from 'moment-timezone';
 import { environment } from 'src/environments/environment';
 import { iconCodes, Weather } from '../shared/weather/types';
 import { WeatherRestService } from '../shared/weather/weather-rest.service';
@@ -29,7 +30,9 @@ export class WeatherComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-    this.weatherRestService.get().then((x) => (this.weather = x));
+    this.weatherRestService.get().then((x) => {
+      this.weather = x;
+    });
   }
 
   getIconUrl(icon: string): string | undefined {
@@ -44,10 +47,16 @@ export class WeatherComponent implements OnInit, OnDestroy {
     return this.getIconUrl(this.weather?.current.weather[0].icon);
   }
 
-  getTomorrowsIconUrl(): string | undefined {
+  getDayIconUrl(day: number): string | undefined {
     if (!this.weather) return undefined;
 
-    return this.getIconUrl(this.weather.daily[1].weather[0].icon);
+    return this.getIconUrl(this.weather.daily[day].weather[0].icon);
+  }
+
+  getHourIconUrl(hour: number): string | undefined {
+    if (!this.weather) return undefined;
+
+    return this.getIconUrl(this.weather.hourly[hour].weather[0].icon);
   }
 
   getIconClass(code: number): string | undefined {
@@ -70,10 +79,17 @@ export class WeatherComponent implements OnInit, OnDestroy {
     return this.getIconClass(code);
   }
 
-  getTomorrowsIconClass(): string | undefined {
+  getDayIconClass(day: number): string | undefined {
     if (!this.weather) return undefined;
 
-    const code = this.weather.daily[1].weather[0].id;
+    const code = this.weather.daily[day].weather[0].id;
+    return this.getIconClass(code);
+  }
+
+  getHourIconClass(hour: number): string | undefined {
+    if (!this.weather) return undefined;
+
+    const code = this.weather.hourly[hour].weather[0].id;
     return this.getIconClass(code);
   }
 
@@ -82,8 +98,53 @@ export class WeatherComponent implements OnInit, OnDestroy {
     return Math.round(this.weather.current.feels_like) + ' °C';
   }
 
-  getTomorrowsTemperature() {
+  getDayTemperature(day: number) {
     if (!this.weather) return '';
-    return Math.round(this.weather.daily[1].feels_like.day) + ' °C';
+    return Math.round(this.weather.daily[day].temp.max) + ' °C';
+  }
+
+  getDate(day: number) {
+    if (!this.weather) return '';
+
+    if (day === 0) return 'heute';
+    if (day === 1) return 'morgen';
+
+    return moment
+      .unix(this.weather.daily[day].dt)
+      .locale(environment.locale)
+      .format('dddd');
+  }
+
+  getHour(hour: number) {
+    if (!this.weather) return '';
+    return (
+      moment
+        .unix(this.weather.hourly[hour].dt)
+        .locale(environment.locale)
+        .format('HH') + ' Uhr'
+    );
+  }
+
+  isMorning() {
+    return moment.tz('Europe/Berlin').get('hour') < 12;
+  }
+
+  getCurrentRain() {
+    if (!this.weather) return '';
+    const nextHour = this.weather.hourly[1].dt;
+    const remainingMinutes = this.weather.minutely.filter(
+      (x) => x.dt > moment().unix() && x.dt < nextHour
+    );
+    const currentHour = remainingMinutes
+      .map((x) => x.precipitation)
+      .reduce((sum: number, precipitation: number) => sum + precipitation, 0);
+    return (
+      currentHour + (this.weather.hourly[1].rain?.['1h'] || 0) + ' mm (2h)'
+    );
+  }
+
+  getDayRain(day: number) {
+    if (!this.weather) return '';
+    return (this.weather.daily[day].rain || 0) + ' mm';
   }
 }
