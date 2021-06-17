@@ -7,7 +7,7 @@ import { sharedEnvironment } from './environment.shared';
 export const environment = {
   ...sharedEnvironment,
   production: false,
-  interval: 5000,
+  interval: 30000,
   mockWeather: false,
 };
 

@@ -54,6 +54,7 @@ export interface WeatherHourly {
   wind_gust: number;
   weather: WeatherItem[];
   pop: number;
+  rain?: { '1h': number };
 }
 
 export interface WeatherDaily {

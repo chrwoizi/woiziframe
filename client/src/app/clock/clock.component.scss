@@ -1,5 +1,4 @@
 .clock {
-  color: white;
   width: 5rem;
   height: 5rem;
 }
@@ -26,24 +25,24 @@
   font-size: 1.5rem;
   position: absolute;
   left: 50%;
-  top: calc(100% + 3.5rem);
+  top: calc(100% + 4.5rem);
   transform: translate(-50%, -50%);
-  text-shadow: 0px 0px 0.1rem #000000;
 }
 .clock-time {
   font-size: 2rem;
   position: absolute;
   left: 50%;
-  top: calc(100% + 1.5rem);
+  top: calc(100% + 2rem);
   transform: translate(-50%, -50%);
-  text-shadow: 0px 0px 0.1rem #000000;
 }
 .clock-number {
   position: absolute;
   width: 100%;
   height: 100%;
   text-align: center;
-  color: transparent;
+}
+.clock-number div {
+  display: none;
 }
 .clock-number:after {
   content: "";

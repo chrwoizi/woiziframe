@@ -6,6 +6,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-clock',
@@ -36,8 +37,9 @@ export class ClockComponent implements AfterViewInit {
     var getSeconds = date.getSeconds() / 60;
     var getMinutes = date.getMinutes() / 60;
     var getHours = date.getHours() / 12;
-    this.date = moment(date).format('DD.\u00A0MMM.');
-    this.time = moment(date).format('HH:mm:ss');
+    const m = moment(date).locale(environment.locale);
+    this.date = m.format('dd\u00A0DD.\u00A0MMM');
+    this.time = m.format('HH:mm:ss');
 
     if (this.secondHand && this.minHand && this.hourHand) {
       this.renderer.setStyle(

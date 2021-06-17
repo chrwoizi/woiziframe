@@ -17,7 +17,7 @@ export class WeatherRestService {
 
     return await this.http
       .get<Weather>(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${environment.locationLatitude}&lon=${environment.locationLongitude}&units=metric&lang=de&appid=${environment.openWeatherApiKey}`
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${environment.locationLatitude}&lon=${environment.locationLongitude}&units=metric&lang=${environment.locale}&appid=${environment.openWeatherApiKey}`
       )
       .toPromise();
   }

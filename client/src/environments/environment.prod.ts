@@ -3,6 +3,6 @@ import { sharedEnvironment } from './environment.shared';
 export const environment = {
   ...sharedEnvironment,
   production: true,
-  interval: 5000,
+  interval: 60000,
   mockWeather: false,
 };
