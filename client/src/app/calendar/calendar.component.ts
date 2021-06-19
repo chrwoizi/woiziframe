@@ -36,18 +36,49 @@ export class CalendarComponent implements OnInit, OnDestroy {
     });
   }
 
+  getDate(event: CalendarEvent) {
+    const start = event.originalStartTime ?? event.start;
+    if (!start) return '';
+
+    let date;
+
+    if (start.dateTime) {
+      date = moment.tz(start.dateTime, start.timeZone ?? environment.timezone);
+    }
+
+    if (start.date) {
+      date = moment.tz(start.date, start.timeZone ?? environment.timezone);
+    }
+
+    if (!date) return '';
+
+    const today = moment.tz(environment.timezone).startOf('day');
+
+    if (date.tz(environment.timezone).startOf('day').isSame(today)) {
+      return 'heute';
+    }
+
+    if (
+      date.tz(environment.timezone).startOf('day').isSame(today.add(1, 'days'))
+    ) {
+      return 'morgen';
+    }
+
+    return date.format('DD. MMM.');
+  }
+
   getDateTime(event: CalendarEvent) {
     const start = event.originalStartTime ?? event.start;
     if (!start) return '';
     if (start.dateTime) {
-      return moment
+      const time = moment
         .tz(start.dateTime, start.timeZone ?? environment.timezone)
-        .format('HH:mm · DD. MMM.');
+        .format('HH:mm');
+      const date = this.getDate(event);
+      return time + ' · ' + date;
     }
     if (start.date) {
-      return moment
-        .tz(start.date, start.timeZone ?? environment.timezone)
-        .format('DD. MMM.');
+      return this.getDate(event);
     }
     return '';
   }
