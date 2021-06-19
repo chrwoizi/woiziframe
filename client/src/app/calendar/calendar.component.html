@@ -1,0 +1,8 @@
+<div class="flex flex-column flex-start" *ngIf="calendar">
+  <div class="event" *ngFor="let event of calendar.events.slice(0, 5)">
+    <div>{{ getDateTime(event) }}</div>
+    <div>
+      {{ event.summary }}
+    </div>
+  </div>
+</div>

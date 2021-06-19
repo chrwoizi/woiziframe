@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment-timezone';
 import { environment } from 'src/environments/environment';
-import { iconCodes, Weather } from '../shared/weather/types';
-import { WeatherRestService } from '../shared/weather/weather-rest.service';
+import { weatherIconCodes } from '../../../../shared/WeatherIconCodes';
+import { Weather } from '../../../../shared/Weather';
+import { WeatherService } from './weather.service';
 
 @Component({
   selector: 'app-weather',
@@ -13,7 +14,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
   weather?: Weather;
   private refreshInterval?: any;
 
-  constructor(private weatherRestService: WeatherRestService) {}
+  constructor(private service: WeatherService) {}
 
   ngOnInit() {
     this.refreshInterval = setInterval(
@@ -30,7 +31,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-    this.weatherRestService.get().then((x) => {
+    this.service.get().then((x) => {
       this.weather = x;
     });
   }
@@ -63,7 +64,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
     if (!this.weather) return undefined;
 
     const prefix = 'wi wi-';
-    let icon = iconCodes[code].icon;
+    let icon = weatherIconCodes[code].icon;
     // If we are not in the ranges mentioned above, add a day/night prefix.
     if (!(code > 699 && code < 800) && !(code > 899 && code < 1000)) {
       icon = 'day-' + icon;
