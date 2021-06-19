@@ -1,4 +1,4 @@
-import { Weather } from './types';
+import { Weather } from './Weather';
 
 export const mock: Weather = {
   lat: 52.4771,

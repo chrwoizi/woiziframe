@@ -11,6 +11,10 @@ export const environment = {
   basePath: secretEnvironment.basePath,
   whitelist: secretEnvironment.whitelist,
   blacklist: secretEnvironment.blacklist,
+  calendar: secretEnvironment.calendar,
+  openWeatherApiKey: secretEnvironment.openWeatherApiKey,
+  mockWeather: false,
+  mockCalendar: false,
 };
 
 /*

@@ -1,0 +1,132 @@
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+}
+
+.images-container,
+.page {
+  width: calc(4 * 100vh / 3);
+  height: calc(100vh);
+  position: relative;
+}
+
+.image-container {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &__active {
+    opacity: 1;
+  }
+}
+
+.image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &--contain {
+    object-fit: contain;
+  }
+
+  &--backdrop {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    filter: blur(90px);
+    object-fit: fill;
+  }
+}
+
+.image-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.info-panel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+}
+
+.album-info {
+  position: absolute;
+  left: 2vh;
+  bottom: 2vh;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &__title {
+    text-shadow: 0px 0px 4px #000000;
+    font-size: 2rem;
+  }
+}
+
+.fullscreen {
+  position: absolute;
+  z-index: 1;
+  right: 2vh;
+  bottom: 2vh;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+  outline: none;
+  padding: 0;
+  opacity: 0.2;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.fullscreen svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+app-clock {
+  position: absolute;
+  right: 2rem;
+  top: 1rem;
+}
+
+app-weather {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+}
+
+app-calendar {
+  position: absolute;
+  right: 1rem;
+  top: 13rem;
+}
+
+.vignette {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0.7;
+  box-shadow: inset 0 0 10vw black;
+}
