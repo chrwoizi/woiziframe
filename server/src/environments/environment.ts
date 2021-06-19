@@ -11,10 +11,11 @@ export const environment = {
   basePath: secretEnvironment.basePath,
   whitelist: secretEnvironment.whitelist,
   blacklist: secretEnvironment.blacklist,
-  calendar: secretEnvironment.calendar,
+  googleCalendarClientId: secretEnvironment.googleCalendarClientId,
+  googleCalendarClientSecret: secretEnvironment.googleCalendarClientSecret,
   openWeatherApiKey: secretEnvironment.openWeatherApiKey,
   mockWeather: false,
-  mockCalendar: false,
+  mockCalendar: true,
 };
 
 /*
