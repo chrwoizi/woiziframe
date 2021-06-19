@@ -15,7 +15,7 @@ export const environment = {
   googleCalendarClientSecret: secretEnvironment.googleCalendarClientSecret,
   openWeatherApiKey: secretEnvironment.openWeatherApiKey,
   mockWeather: false,
-  mockCalendar: true,
+  mockCalendar: false,
 };
 
 /*
