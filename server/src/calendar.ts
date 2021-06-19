@@ -71,13 +71,21 @@ export async function listEvents() {
   const results: calendar_v3.Schema$Event[] = [];
 
   for (const token of tokens.slice()) {
-    if (token.expiry_date < new Date().getTime()) {
+    oAuth2Client.setCredentials(token);
+
+    const accessToken = await oAuth2Client.getAccessToken();
+    if (!accessToken.token) {
       tokens = tokens.filter((x) => x !== token);
       saveTokens();
       continue;
     }
 
-    oAuth2Client.setCredentials(token);
+    const newToken = accessToken.res.data as Auth.Credentials;
+    if (newToken.access_token !== token.access_token) {
+      tokens = tokens.filter((x) => x !== token);
+      tokens.push(accessToken.res.data);
+      saveTokens();
+    }
 
     try {
       const calendars = await apiListCalendars();
