@@ -1,10 +1,18 @@
-const express = require('express');
+import * as express from 'express';
+import {
+  getAuthorizationUrl,
+  loadCalendar,
+  addAuthorizationCode,
+} from './calendar';
+import { environment as devEnvironment } from './environments/environment';
+import { environment as prodEnvironment } from './environments/environment.prod';
+import { loadWeather } from './weather';
 const fs = require('fs');
 const path = require('path');
 const server = express();
+const bodyParser = require('body-parser');
 
-import { environment as prodEnvironment } from './environments/environment.prod';
-import { environment as devEnvironment } from './environments/environment';
+server.use(bodyParser.json());
 
 let environment;
 if (process.env.NODE_ENV === 'production') {
@@ -27,7 +35,7 @@ function findFiles(dir: string) {
     );
 }
 
-server.get('/albums', (req: any, res: { send: (arg0: string) => void }) => {
+server.get('/albums', (req, res) => {
   let albums = fs
     .readdirSync(basePath)
     .filter((x: any) => fs.statSync(path.join(basePath, x)).isDirectory());
@@ -37,30 +45,66 @@ server.get('/albums', (req: any, res: { send: (arg0: string) => void }) => {
   if (blacklist.length > 0) {
     albums = albums.filter((x: any) => blacklist.indexOf(x) === -1);
   }
-  res.send(JSON.stringify(albums));
+  res.json(albums);
 });
 
-server.get(
-  '/files',
-  (req: { query: { album: any } }, res: { send: (arg0: string) => void }) => {
-    function collectFiles(dir: string) {
-      const dirs = fs
-        .readdirSync(dir)
-        .filter((x: any) => fs.statSync(path.join(dir, x)).isDirectory());
+server.get('/files', (req, res) => {
+  function collectFiles(dir: string) {
+    const dirs = fs
+      .readdirSync(dir)
+      .filter((x: any) => fs.statSync(path.join(dir, x)).isDirectory());
 
-      let files = findFiles(dir).map((x: any) => path.join(dir, x));
+    let files = findFiles(dir).map((x: any) => path.join(dir, x));
 
-      for (const subdir of dirs) {
-        files = files.concat(collectFiles(path.join(dir, subdir)));
-      }
-      return files;
+    for (const subdir of dirs) {
+      files = files.concat(collectFiles(path.join(dir, subdir)));
     }
-    const allFiles = collectFiles(path.join(basePath, req.query.album || ''));
-    res.send(
-      JSON.stringify(allFiles.map((x: string) => x.substr(basePath.length + 1)))
-    );
+    return files;
   }
-);
+  const allFiles = collectFiles(path.join(basePath, req.query.album || ''));
+  res.json(allFiles.map((x: string) => x.substr(basePath.length + 1)));
+});
 
 server.use('/file', express.static(basePath));
+
+server.get('/weather', async (req, res) => {
+  try {
+    res.json(await loadWeather());
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+server.get('/calendar', async (req, res) => {
+  try {
+    res.json(await loadCalendar());
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+server
+  .route('/calendar/auth')
+  .get(async (req, res) => {
+    try {
+      res.json(await getAuthorizationUrl());
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(500);
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      await addAuthorizationCode(req.body.code as string);
+      res.json();
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(500);
+    }
+  });
+
+console.log('Server is running');
+
 server.listen(4201, '0.0.0.0');

@@ -4,5 +4,4 @@ export const environment = {
   ...sharedEnvironment,
   production: true,
   interval: 60000,
-  mockWeather: false,
 };

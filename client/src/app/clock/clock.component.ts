@@ -29,10 +29,11 @@ export class ClockComponent implements AfterViewInit {
   constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
-    setInterval(() => this.clockRotating(), 1000);
+    setInterval(() => this.refresh(), 1000);
+    setTimeout(() => this.refresh(), 0);
   }
 
-  clockRotating() {
+  refresh() {
     var date = new Date();
     var getSeconds = date.getSeconds() / 60;
     var getMinutes = date.getMinutes() / 60;
