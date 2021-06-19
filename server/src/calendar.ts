@@ -10,9 +10,9 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 const TOKENS_PATH = 'calendar.secret.json';
 
 const oAuth2Client = new google.auth.OAuth2(
-  environment.calendar.client_id,
-  environment.calendar.client_secret,
-  environment.calendar.redirect_uris[0]
+  environment.googleCalendarClientId,
+  environment.googleCalendarClientSecret,
+  'http://localhost:4200/calendar-redirect'
 );
 
 let tokens: Auth.Credentials[] = [];
