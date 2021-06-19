@@ -14,6 +14,8 @@ Features:
 
 - The current time and date is shown.
 
+- Google calendar events can be shown. To add a calendar run `npm run add-calendar` in the `server` directory.
+
 - The album title is shown at the bottom of the screen.
 
 - A button toggles the fullscreen browser mode.
