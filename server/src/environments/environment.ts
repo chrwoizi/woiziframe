@@ -14,8 +14,10 @@ export const environment = {
   googleCalendarClientId: secretEnvironment.googleCalendarClientId,
   googleCalendarClientSecret: secretEnvironment.googleCalendarClientSecret,
   openWeatherApiKey: secretEnvironment.openWeatherApiKey,
+  garbageFormData: secretEnvironment.garbageFormData,
   mockWeather: false,
   mockCalendar: false,
+  mockGarbage: true,
 };
 
 /*
