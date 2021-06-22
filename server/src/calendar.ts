@@ -12,7 +12,11 @@ const TOKENS_PATH = 'calendar.secret.json';
 const oAuth2Client = new google.auth.OAuth2(
   environment.googleCalendarClientId,
   environment.googleCalendarClientSecret,
-  'http://localhost:4200/calendar-redirect'
+  `http://${
+    environment.host === '0.0.0.0' || environment.host === '127.0.0.1'
+      ? 'localhost'
+      : environment.host
+  }:${environment.port}/calendar/confirm`
 );
 
 let tokens: Auth.Credentials[] = [];
