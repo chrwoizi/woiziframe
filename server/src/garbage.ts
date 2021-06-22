@@ -1,9 +1,9 @@
 import * as request from 'request-promise-native';
-import { GarbageDisposal } from '../../shared/GarbageDisposal';
-import { mock } from '../../shared/GarbageMock';
+import { GarbageDisposal } from '../../shared/garbage/GarbageDisposal';
+import { mock } from '../../shared/garbage/GarbageMock';
 import { environment } from './environments/environment';
 import { parse } from 'node-html-parser';
-import { GarbageDisposalEvent } from '../../shared/GarbageDisposalEvent';
+import { GarbageDisposalEvent } from '../../shared/garbage/GarbageDisposalEvent';
 
 export async function loadGarbage(): Promise<GarbageDisposal> {
   if (environment.mockGarbage) {

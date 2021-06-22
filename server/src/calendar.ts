@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { Auth, calendar_v3, google } from 'googleapis';
-import { Calendar } from '../../shared/Calendar';
-import { mock } from '../../shared/CalendarMock';
+import { Calendar } from '../../shared/calendar/Calendar';
+import { mock } from '../../shared/calendar/CalendarMock';
 import { environment } from './environments/environment';
 import * as moment from 'moment-timezone';
 

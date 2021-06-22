@@ -1,4 +1,4 @@
-import { CalendarEvent } from '../../../shared/CalendarEvent';
+import { CalendarEvent } from '../../../shared/calendar/CalendarEvent';
 
 export const sharedEnvironment = {
   locationLatitude: 52.477093,
