@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment-timezone';
 import { environment } from 'src/environments/environment';
-import { weatherIconCodes } from '../../../../shared/WeatherIconCodes';
-import { Weather } from '../../../../shared/Weather';
+import { weatherIconCodes } from '../../../../shared/weather/WeatherIconCodes';
+import { Weather } from '../../../../shared/weather/Weather';
 import { WeatherService } from './weather.service';
+import { i18n } from '../../../../shared/i18n';
 
 @Component({
   selector: 'app-weather',
@@ -107,8 +108,8 @@ export class WeatherComponent implements OnInit, OnDestroy {
   getDate(day: number) {
     if (!this.weather) return '';
 
-    if (day === 0) return 'heute';
-    if (day === 1) return 'morgen';
+    if (day === 0) return i18n.today;
+    if (day === 1) return i18n.tomorrow;
 
     return moment
       .unix(this.weather.daily[day].dt)
@@ -116,22 +117,12 @@ export class WeatherComponent implements OnInit, OnDestroy {
       .format('dddd');
   }
 
-  getHour(hour: number) {
-    if (!this.weather) return '';
-    return (
-      moment
-        .unix(this.weather.hourly[hour].dt)
-        .locale(environment.locale)
-        .format('HH') + ' Uhr'
-    );
-  }
-
   isMorning() {
-    return moment.tz('Europe/Berlin').get('hour') < 12;
+    return moment.tz(environment.timezone).get('hour') < 12;
   }
 
   getCurrentRain() {
-    if (!this.weather) return '';
+    if (!this.weather?.minutely || !this.weather?.hourly) return '';
     const nextHour = this.weather.hourly[1].dt;
     const remainingMinutes = this.weather.minutely.filter(
       (x) => x.dt > moment().unix() && x.dt < nextHour
@@ -140,7 +131,10 @@ export class WeatherComponent implements OnInit, OnDestroy {
       .map((x) => x.precipitation)
       .reduce((sum: number, precipitation: number) => sum + precipitation, 0);
     return (
-      currentHour + (this.weather.hourly[1].rain?.['1h'] || 0) + ' mm (2h)'
+      currentHour +
+      (this.weather.hourly[1].rain?.['1h'] || 0) +
+      ' mm' +
+      i18n.weather.twoHours
     );
   }
 

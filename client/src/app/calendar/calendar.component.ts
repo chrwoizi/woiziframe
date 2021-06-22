@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Calendar } from '../../../../shared/Calendar';
-import { CalendarEvent } from '../../../../shared/CalendarEvent';
+import { Calendar } from '../../../../shared/calendar/Calendar';
+import { CalendarEvent } from '../../../../shared/calendar/CalendarEvent';
 import { CalendarService } from './calendar.service';
 import * as moment from 'moment-timezone';
+import { i18n } from '../../../../shared/i18n';
 
 @Component({
   selector: 'app-calendar',
@@ -55,16 +56,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const today = moment.tz(environment.timezone).startOf('day');
 
     if (date.tz(environment.timezone).startOf('day').isSame(today)) {
-      return 'heute';
+      return i18n.today;
     }
 
     if (
       date.tz(environment.timezone).startOf('day').isSame(today.add(1, 'days'))
     ) {
-      return 'morgen';
+      return i18n.tomorrow;
     }
 
-    return date.format('DD. MMM.');
+    return date.format(i18n.dateFormat);
   }
 
   getDateTime(event: CalendarEvent) {
@@ -73,7 +74,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     if (start.dateTime) {
       const time = moment
         .tz(start.dateTime, start.timeZone ?? environment.timezone)
-        .format('HH:mm');
+        .format(i18n.timeFormat);
       const date = this.getDate(event);
       return time + ' · ' + date;
     }
