@@ -8,6 +8,8 @@ import { sharedEnvironment } from './environment.shared';
 export const environment = {
   ...sharedEnvironment,
   production: false,
+  host: '0.0.0.0',
+  port: 4201,
   basePath: secretEnvironment.basePath,
   whitelist: secretEnvironment.whitelist,
   blacklist: secretEnvironment.blacklist,
