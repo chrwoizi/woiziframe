@@ -8,5 +8,5 @@ export const sharedEnvironment = {
   timezone: 'Europe/Berlin',
 
   filterCalendarEvent: (event: CalendarEvent) =>
-    /woiziframe\s*:\s*nein/.test(event.description?.toLowerCase()),
+    !/woiziframe\s*:\s*nein/.test(event.description?.toLowerCase()),
 };
