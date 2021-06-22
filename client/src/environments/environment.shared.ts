@@ -6,6 +6,7 @@ export const sharedEnvironment = {
 
   weatherRefreshIntervalMinutes: 10,
   calendarRefreshIntervalMinutes: 10,
+  garbageRefreshIntervalMinutes: 24 * 60,
 
   locale: 'de',
   timezone: 'Europe/Berlin',

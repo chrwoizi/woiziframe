@@ -6,6 +6,7 @@ import {
 } from './calendar';
 import { environment as devEnvironment } from './environments/environment';
 import { environment as prodEnvironment } from './environments/environment.prod';
+import { loadGarbage } from './garbage';
 import { loadWeather } from './weather';
 const fs = require('fs');
 const path = require('path');
@@ -104,6 +105,15 @@ server
       res.sendStatus(500);
     }
   });
+
+server.get('/garbage', async (req, res) => {
+  try {
+    res.json(await loadGarbage());
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
 
 console.log('Server is running');
 

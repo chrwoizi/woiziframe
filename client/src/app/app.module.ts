@@ -11,6 +11,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { RouterModule } from '@angular/router';
 import { CalendarRedirectComponent } from './calendar-redirect/calendar-redirect.component';
 import { DefaultComponent } from './default/default.component';
+import { GarbageComponent } from './garbage/garbage.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { DefaultComponent } from './default/default.component';
     WeatherIconComponent,
     CalendarComponent,
     CalendarRedirectComponent,
+    GarbageComponent,
     DefaultComponent,
   ],
   imports: [
