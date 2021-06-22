@@ -11,12 +11,4 @@ export class CalendarService {
   async get(): Promise<Calendar> {
     return await this.http.get<Calendar>(`/api/calendar`).toPromise();
   }
-
-  async getAuthUrl(): Promise<string> {
-    return await this.http.get<string>(`/api/calendar/auth`).toPromise();
-  }
-
-  async setAuthCode(code: string): Promise<void> {
-    await this.http.post(`/api/calendar/auth`, { code }).toPromise();
-  }
 }

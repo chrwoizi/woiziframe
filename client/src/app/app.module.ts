@@ -9,7 +9,6 @@ import { WeatherComponent } from './weather/weather.component';
 import { WeatherIconComponent } from './weather-icon/weather-icon.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { RouterModule } from '@angular/router';
-import { CalendarRedirectComponent } from './calendar-redirect/calendar-redirect.component';
 import { DefaultComponent } from './default/default.component';
 import { GarbageComponent } from './garbage/garbage.component';
 
@@ -20,7 +19,6 @@ import { GarbageComponent } from './garbage/garbage.component';
     WeatherComponent,
     WeatherIconComponent,
     CalendarComponent,
-    CalendarRedirectComponent,
     GarbageComponent,
     DefaultComponent,
   ],
@@ -28,10 +26,7 @@ import { GarbageComponent } from './garbage/garbage.component';
     BrowserModule,
     SharedModule,
     HttpClientModule,
-    RouterModule.forRoot([
-      { path: '', component: DefaultComponent },
-      { path: 'calendar-redirect', component: CalendarRedirectComponent },
-    ]),
+    RouterModule.forRoot([{ path: '', component: DefaultComponent }]),
   ],
   providers: [],
   bootstrap: [AppComponent],

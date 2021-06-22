@@ -1,8 +1,8 @@
 import * as express from 'express';
 import {
+  addAuthorizationCode,
   getAuthorizationUrl,
   loadCalendar,
-  addAuthorizationCode,
 } from './calendar';
 import { environment as devEnvironment } from './environments/environment';
 import { environment as prodEnvironment } from './environments/environment.prod';
@@ -86,25 +86,24 @@ server.get('/calendar', async (req, res) => {
   }
 });
 
-server
-  .route('/calendar/auth')
-  .get(async (req, res) => {
-    try {
-      res.json(await getAuthorizationUrl());
-    } catch (e) {
-      console.log(e);
-      res.sendStatus(500);
-    }
-  })
-  .post(async (req, res) => {
-    try {
-      await addAuthorizationCode(req.body.code as string);
-      res.json();
-    } catch (e) {
-      console.log(e);
-      res.sendStatus(500);
-    }
-  });
+server.get('/calendar/auth', async (req, res) => {
+  try {
+    res.json(await getAuthorizationUrl());
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+server.get('/calendar/confirm', async (req, res) => {
+  try {
+    await addAuthorizationCode(req.query.code as string);
+    res.sendFile(path.join(__dirname, '..', 'res', 'calendar-confirmed.html'));
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
 
 server.get('/garbage', async (req, res) => {
   try {
@@ -117,4 +116,4 @@ server.get('/garbage', async (req, res) => {
 
 console.log('Server is running');
 
-server.listen(4201, '0.0.0.0');
+server.listen(environment.port, environment.host);
