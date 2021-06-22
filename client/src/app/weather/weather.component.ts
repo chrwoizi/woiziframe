@@ -97,12 +97,12 @@ export class WeatherComponent implements OnInit, OnDestroy {
 
   getCurrentTemperature() {
     if (!this.weather) return '';
-    return Math.round(this.weather.current.feels_like) + ' °C';
+    return Math.round(this.weather.current.feels_like) + '\u00A0°C';
   }
 
   getDayTemperature(day: number) {
     if (!this.weather) return '';
-    return Math.round(this.weather.daily[day].temp.max) + ' °C';
+    return Math.round(this.weather.daily[day].temp.max) + '\u00A0°C';
   }
 
   getDate(day: number) {
@@ -123,6 +123,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
 
   getCurrentRain() {
     if (!this.weather?.minutely || !this.weather?.hourly) return '';
+
     const nextHour = this.weather.hourly[1].dt;
     const remainingMinutes = this.weather.minutely.filter(
       (x) => x.dt > moment().unix() && x.dt < nextHour
@@ -130,16 +131,22 @@ export class WeatherComponent implements OnInit, OnDestroy {
     const currentHour = remainingMinutes
       .map((x) => x.precipitation)
       .reduce((sum: number, precipitation: number) => sum + precipitation, 0);
-    return (
-      currentHour +
-      (this.weather.hourly[1].rain?.['1h'] || 0) +
-      ' mm' +
-      i18n.weather.twoHours
-    );
+
+    const mm = currentHour + (this.weather.hourly[1].rain?.['1h'] || 0);
+    if (mm > 0) {
+      return mm + '\u00A0mm' + i18n.weather.now;
+    } else {
+      return i18n.weather.noRain;
+    }
   }
 
   getDayRain(day: number) {
     if (!this.weather) return '';
-    return (this.weather.daily[day].rain || 0) + ' mm';
+    const mm = this.weather.daily[day].rain || 0;
+    if (mm > 0) {
+      return mm + '\u00A0mm';
+    } else {
+      return i18n.weather.noRain;
+    }
   }
 }
