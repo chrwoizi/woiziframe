@@ -1,0 +1,8 @@
+<div class="flex flex-row justify-center flex-start" *ngIf="garbage">
+  <div class="item" *ngIf="outThisEvening && outThisEvening.length > 0">
+    Müll rausstellen:
+  </div>
+  <div class="item" *ngFor="let type of outThisEvening">
+    {{ type }}
+  </div>
+</div>
