@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-import { GarbageDisposal } from '../../../../shared/GarbageDisposal';
-import { GarbageDisposalEvent } from '../../../../shared/GarbageDisposalEvent';
+import { GarbageDisposal } from '../../../../shared/garbage/GarbageDisposal';
+import { GarbageDisposalEvent } from '../../../../shared/garbage/GarbageDisposalEvent';
+import { i18n } from '../../../../shared/i18n';
 import { GarbageService } from './garbage.service';
 
 @Component({
@@ -13,6 +14,7 @@ import { GarbageService } from './garbage.service';
 export class GarbageComponent implements OnInit, OnDestroy {
   garbage?: GarbageDisposal;
   outThisEvening?: string[];
+  i18n = i18n;
   private displayInterval?: any;
   private refreshInterval?: any;
 
@@ -60,12 +62,6 @@ export class GarbageComponent implements OnInit, OnDestroy {
   }
 
   translate(type: GarbageDisposalEvent['type']) {
-    switch (type) {
-      case 'misc':
-        return 'Restmülltonne';
-      case 'packaging':
-        return 'Gelbe Säcke';
-    }
-    return undefined;
+    return i18n.garbage[type];
   }
 }

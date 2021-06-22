@@ -1,6 +1,6 @@
 import { environment } from './environments/environment';
-import { Weather } from '../../shared/Weather';
-import { mock } from '../../shared/WeatherMock';
+import { Weather } from '../../shared/weather/Weather';
+import { mock } from '../../shared/weather/WeatherMock';
 import * as request from 'request-promise-native';
 
 export async function loadWeather(): Promise<Weather> {
