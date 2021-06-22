@@ -80,11 +80,13 @@ export async function listEvents() {
       continue;
     }
 
-    const newToken = accessToken.res.data as Auth.Credentials;
-    if (newToken.access_token !== token.access_token) {
-      tokens = tokens.filter((x) => x !== token);
-      tokens.push(accessToken.res.data);
-      saveTokens();
+    if (accessToken.res) {
+      const newToken = accessToken.res.data as Auth.Credentials;
+      if (newToken.access_token !== token.access_token) {
+        tokens = tokens.filter((x) => x !== token);
+        tokens.push(accessToken.res.data);
+        saveTokens();
+      }
     }
 
     try {
@@ -94,8 +96,10 @@ export async function listEvents() {
         const events = await apiListEvents(calendar.id);
 
         for (const event of events) {
-          if (!results.find((x) => x.id === event.id)) {
-            results.push(event);
+          if (environment.filterCalendarEvent(event)) {
+            if (!results.find((x) => x.id === event.id)) {
+              results.push(event);
+            }
           }
         }
       }
