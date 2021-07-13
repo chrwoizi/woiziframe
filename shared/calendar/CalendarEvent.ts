@@ -1,3 +1,5 @@
+import { Directions } from '../directions/Directions';
+import { CalendarAttendee } from './CalendarAttendee';
 import { CalendarEventDateTime } from './CalendarEventDateTime';
 import { CalendarEventReminder } from './CalendarEventReminder';
 
@@ -91,4 +93,21 @@ export interface CalendarEvent {
    * - "confidential" - The event is private. This value is provided for compatibility reasons.
    */
   visibility?: string | null;
+
+  etag?: string | null;
+  status?: string | null;
+  htmlLink?: string | null;
+  created?: string | null;
+  updated?: string | null;
+  transparency?: string | null;
+  iCalUID?: string | null;
+  sequence?: number | null;
+  eventType?: string | null;
+  recurringEventId?: string | null;
+  attendees?: CalendarAttendee[];
+  guestsCanInviteOthers?: boolean;
+  privateCopy?: boolean;
+
+  drivingDirections?: Directions;
+  transitDirections?: Directions;
 }

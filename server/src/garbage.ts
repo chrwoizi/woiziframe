@@ -6,7 +6,7 @@ import { parse } from 'node-html-parser';
 import { GarbageDisposalEvent } from '../../shared/garbage/GarbageDisposalEvent';
 
 export async function loadGarbage(): Promise<GarbageDisposal> {
-  if (environment.mockGarbage) {
+  if (environment.garbage.mockGarbage) {
     return mock;
   }
 
@@ -14,7 +14,7 @@ export async function loadGarbage(): Promise<GarbageDisposal> {
     'https://www.aha-region.de/abholtermine/abfuhrkalender?gemeinde=Uetze&von=I&bis=J';
   const html = await request(url, {
     method: 'POST',
-    form: environment.garbageFormData,
+    form: environment.garbage.garbageFormData,
   });
 
   const root = parse(html);

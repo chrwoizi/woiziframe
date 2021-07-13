@@ -1,0 +1,17 @@
+<div class="flex flex-row justify-center flex-start" *ngIf="directions">
+  <div class="item" *ngFor="let direction of directions">
+    <span>{{ direction.query.name }}: </span>
+    <span
+      [ngClass]="
+        isRedTraffic(direction.directions)
+          ? 'red-traffic'
+          : isYellowTraffic(direction.directions)
+          ? 'yellow-traffic'
+          : ''
+      "
+      >{{ getDuration(direction.directions) }}</span
+    ><span *ngIf="getRoute(direction.directions)">
+      {{ i18n.directions.via }} {{ getRoute(direction.directions) }}</span
+    >
+  </div>
+</div>

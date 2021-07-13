@@ -7,7 +7,11 @@ export const sharedEnvironment = {
   weatherRefreshIntervalMinutes: 10,
   calendarRefreshIntervalMinutes: 10,
   garbageRefreshIntervalMinutes: 24 * 60,
+  directionsRefreshIntervalMinutes: 10,
 
   locale: 'de',
   timezone: 'Europe/Berlin',
+
+  yellowTrafficFactor: 1.1,
+  redTrafficFactor: 1.2,
 };

@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { DefaultComponent } from './default/default.component';
 import { GarbageComponent } from './garbage/garbage.component';
 import { PhotoComponent } from './photo/photo.component';
+import { DirectionsComponent } from './directions/directions.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { PhotoComponent } from './photo/photo.component';
     GarbageComponent,
     DefaultComponent,
     PhotoComponent,
+    DirectionsComponent,
   ],
   imports: [
     BrowserModule,
