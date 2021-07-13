@@ -4,5 +4,35 @@
     <div>
       {{ event.summary }}
     </div>
+    <div *ngIf="event.location">
+      <div
+        *ngIf="event.drivingDirections && getDuration(event.drivingDirections)"
+      >
+        {{ i18n.directions.car }}:
+        <span
+          [ngClass]="
+            isRedTraffic(event.drivingDirections)
+              ? 'red-traffic'
+              : isYellowTraffic(event.drivingDirections)
+              ? 'yellow-traffic'
+              : ''
+          "
+          >{{ getDuration(event.drivingDirections) }}</span
+        ><span *ngIf="getRoute(event.drivingDirections)">
+          {{ i18n.directions.via }}
+          {{ getRoute(event.drivingDirections) }}</span
+        >
+      </div>
+      <div
+        *ngIf="event.transitDirections && getDuration(event.transitDirections)"
+      >
+        {{ i18n.directions.transit }}:
+        <span>{{ getDuration(event.transitDirections) }}</span
+        ><span *ngIf="getRoute(event.transitDirections)">
+          {{ i18n.directions.via }}
+          {{ getRoute(event.transitDirections) }}</span
+        >
+      </div>
+    </div>
   </div>
 </div>

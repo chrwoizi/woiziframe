@@ -83,8 +83,8 @@
 .fullscreen {
   position: absolute;
   z-index: 1;
-  right: 2vh;
-  bottom: 2vh;
+  left: 2vh;
+  bottom: 6vh;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -125,6 +125,12 @@ app-garbage {
   position: absolute;
   width: 100%;
   top: 1rem;
+}
+
+app-directions {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 .vignette {

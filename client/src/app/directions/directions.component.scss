@@ -1,7 +1,9 @@
-.event {
+.item {
   text-align: right;
-  width: 100%;
-  margin-bottom: 1.5rem;
+}
+
+.item:not(:first-child) {
+  margin-left: 1.5rem;
 }
 
 .yellow-traffic {

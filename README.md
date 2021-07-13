@@ -1,6 +1,6 @@
 # Woiziframe
 
-This web application displays photos from disk.
+This web application displays photos from disk. It is supposed to run on a digital photo frame.
 
 Features:
 
@@ -10,19 +10,25 @@ Features:
 
 - The photo is resized to fit the screen. The remaining screen space is filled with a blurred variant of the image.
 
-- The current weather and tomorrow's weather are shown as icon and temperature
-
-- The current time and date is shown.
-
-- Google calendar events can be shown. To add a calendar run `npm run add-calendar` in the `server` directory.
-
 - The album title is shown at the bottom of the screen.
 
 - A button toggles the fullscreen browser mode.
 
+- Additional data can be displayed as text on top of the photo:
+
+  - The current time and date.
+
+  - The current weather and tomorrow's weather as icon, temperature, and rain. (OpenWeatherMap)
+
+  - Calendar events. To connect to a Google Calendar run `npm run add-calendar` in the `server` directory.
+
+  - The driving duration and public transit duration to calendar event locations and to daily recurring destinations, e.g. the workplace. (Google Directions API)
+
+  - The garbage collection events in Hannover, Germany.
+
 ![screenshot](docs/screenshot.png)
 
-This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame) and [krzysztofsaja/angular-weather-widget](https://github.com/krzysztofsaja/angular-weather-widget)
+This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame) and the weather widget [krzysztofsaja/angular-weather-widget](https://github.com/krzysztofsaja/angular-weather-widget)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.4.
 

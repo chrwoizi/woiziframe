@@ -5,6 +5,14 @@ import { CalendarEvent } from '../../../../shared/calendar/CalendarEvent';
 import { CalendarService } from './calendar.service';
 import * as moment from 'moment-timezone';
 import { i18n } from '../../../../shared/i18n';
+import { Directions } from '../../../../shared/directions/Directions';
+import {
+  getDuration,
+  getRoute,
+  getTraffic,
+  isRedTraffic,
+  isYellowTraffic,
+} from '../directions/directions.parser';
 
 @Component({
   selector: 'app-calendar',
@@ -13,6 +21,7 @@ import { i18n } from '../../../../shared/i18n';
 })
 export class CalendarComponent implements OnInit, OnDestroy {
   calendar?: Calendar;
+  i18n = i18n;
   private refreshInterval?: any;
 
   constructor(private service: CalendarService) {}
@@ -82,5 +91,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
       return this.getDate(event);
     }
     return '';
+  }
+
+  getDuration(directions: Directions) {
+    return getDuration(directions);
+  }
+
+  getTraffic(directions: Directions) {
+    return getTraffic(directions);
+  }
+
+  isYellowTraffic(directions: Directions) {
+    return isYellowTraffic(directions);
+  }
+
+  isRedTraffic(directions: Directions) {
+    return isRedTraffic(directions);
+  }
+
+  getRoute(directions: Directions) {
+    return getRoute(directions);
   }
 }

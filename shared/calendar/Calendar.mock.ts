@@ -34,7 +34,8 @@ export const mock: Calendar = {
     {
       kind: 'calendar#event',
       id: '6ksjieakc5hmc2b2c4r32a9kclj36bb1bgp64b9hc4q66p1dcg330p9mc4',
-      summary: 'Call the White House',
+      summary: 'Pick up a friend',
+      location: 'Braunschweig',
       creator: {
         email: 'someone@googlemail.com',
         self: true,

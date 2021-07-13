@@ -1,17 +1,19 @@
 import * as fs from 'fs';
 import { Auth, calendar_v3, google } from 'googleapis';
 import { Calendar } from '../../shared/calendar/Calendar';
-import { mock } from '../../shared/calendar/CalendarMock';
+import { mock } from '../../shared/calendar/Calendar.mock';
 import { environment } from './environments/environment';
 import * as moment from 'moment-timezone';
+import { loadDirections } from './directions';
+import { CalendarEvent } from '../../shared/calendar/CalendarEvent';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 
 const TOKENS_PATH = 'calendar.secret.json';
 
 const oAuth2Client = new google.auth.OAuth2(
-  environment.googleCalendarClientId,
-  environment.googleCalendarClientSecret,
+  environment.calendar.googleCalendarClientId,
+  environment.calendar.googleCalendarClientSecret,
   `http://${
     environment.host === '0.0.0.0' || environment.host === '127.0.0.1'
       ? 'localhost'
@@ -100,7 +102,7 @@ export async function listEvents() {
         const events = await apiListEvents(calendar.id);
 
         for (const event of events) {
-          if (environment.filterCalendarEvent(event)) {
+          if (environment.calendar.filterCalendarEvent(event)) {
             if (!results.find((x) => x.id === event.id)) {
               results.push(event);
             }
@@ -177,12 +179,47 @@ async function apiListEvents(calendarId: string) {
 }
 
 export async function loadCalendar(): Promise<Calendar> {
-  if (environment.mockCalendar) {
-    return mock;
+  let calendar: Calendar;
+  if (environment.calendar.mockCalendar) {
+    calendar = mock;
+  } else {
+    calendar = { events: await listEvents() };
   }
 
-  const events = await listEvents();
-  return {
-    events: events,
-  } as Calendar;
+  let count = 0;
+  for (const event of calendar.events) {
+    if (++count >= 5) break;
+    if (event.location?.length > 0) {
+      const arrivalTime = event.start.dateTime
+        ? moment
+            .tz(
+              event.start.dateTime,
+              event.start.timeZone ?? environment.timezone
+            )
+            .toDate()
+        : event.start.date
+        ? moment
+            .tz(event.start.date, event.start.timeZone ?? environment.timezone)
+            .toDate()
+        : undefined;
+
+      event.drivingDirections = await loadDirections(
+        event.location,
+        undefined,
+        arrivalTime,
+        'driving'
+      );
+
+      if (event.drivingDirections) {
+        event.transitDirections = await loadDirections(
+          event.location,
+          undefined,
+          arrivalTime,
+          'transit'
+        );
+      }
+    }
+  }
+
+  return calendar;
 }
