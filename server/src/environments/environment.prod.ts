@@ -1,19 +1,25 @@
-import { secretEnvironment } from './environment.prod.secret';
-import { sharedEnvironment } from './environment.shared';
+import { prodSecretEnvironment } from './environment.prod.secret';
+import { Environment } from './environment.type';
+import { keys } from './keys.secret';
 
-export const environment = {
-  ...sharedEnvironment,
+export const environment: Environment = {
   production: true,
   host: '0.0.0.0',
   port: 4201,
-  basePath: secretEnvironment.basePath,
-  whitelist: secretEnvironment.whitelist,
-  blacklist: secretEnvironment.blacklist,
-  googleCalendarClientId: secretEnvironment.googleCalendarClientId,
-  googleCalendarClientSecret: secretEnvironment.googleCalendarClientSecret,
-  openWeatherApiKey: secretEnvironment.openWeatherApiKey,
-  garbageFormData: secretEnvironment.garbageFormData,
-  mockWeather: false,
-  mockCalendar: false,
-  mockGarbage: false,
+  ...prodSecretEnvironment,
+
+  calendar: {
+    ...keys.calendar,
+    ...prodSecretEnvironment.calendar,
+  },
+
+  directions: {
+    ...keys.directions,
+    ...prodSecretEnvironment.directions,
+  },
+
+  weather: {
+    ...keys.weather,
+    ...prodSecretEnvironment.weather,
+  },
 };

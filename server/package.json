@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "nodemon",
+    "start:prod": "env NODE_ENV=production nodemon",
     "add-calendar": "ts-node src/add-calendar.ts"
   },
   "private": true,
