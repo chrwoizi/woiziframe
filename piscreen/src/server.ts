@@ -36,11 +36,13 @@ function handleExecResult(
 }
 
 server.get('/on', (req, res) => {
-  exec('xset dpms force on', handleExecResult(res));
+  //exec('xset dpms force on', handleExecResult(res));
+  exec('sudo tvservice -p && sudo chvt 2 && sudo chvt 7', handleExecResult(res));
 });
 
 server.get('/off', (req, res) => {
-  exec('xset dpms force off', handleExecResult(res));
+  //exec('xset dpms force off', handleExecResult(res));
+  exec('sudo tvservice -o', handleExecResult(res));
 });
 
 console.log(
