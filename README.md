@@ -34,6 +34,8 @@ This project is based on The Google Photos client [anton-lunev/photo-frame](http
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.4.
 
+Use [piscreen](piscreen/README.md) to switch the raspberry pi display on or off based on motion detection or web api.
+
 ## Development server
 
 Run `cd client; npm start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

@@ -8,6 +8,9 @@ export const environment: Environment = {
   production: false,
   host: '0.0.0.0',
   port: 4202,
+  minOnDuration: 10000,
+  sensorPin: 12,
+  sensorInterval: 100,
 };
 
 /*

@@ -1,7 +1,7 @@
-import { exec } from 'child_process';
 import * as express from 'express';
 import { environment as devEnvironment } from './environments/environment';
 import { environment as prodEnvironment } from './environments/environment.prod';
+import { ScreenSwitch } from './ScreenSwitch';
 const server = express();
 const bodyParser = require('body-parser');
 
@@ -17,32 +17,22 @@ if (process.env.NODE_ENV === 'production') {
   console.log('PROD');
 }
 
-function handleExecResult(
-  res
-): (
-  error: import('child_process').ExecException,
-  stdout: string,
-  stderr: string
-) => void {
-  return (error, stdout, stderr) => {
-    if (error) {
-      res.json({ error: error.toString() });
-    } else if (stderr) {
-      res.json({ error: stderr });
-    } else {
-      res.json({ status: stdout });
-    }
-  };
-}
-
-server.get('/on', (req, res) => {
-  //exec('xset dpms force on', handleExecResult(res));
-  exec('sudo tvservice -p && sudo chvt 2 && sudo chvt 7', handleExecResult(res));
+server.get('/on', async (req, res) => {
+  try {
+    const stdout = await ScreenSwitch.on();
+    res.json({ status: stdout });
+  } catch (e) {
+    res.json({ error: e.toString() });
+  }
 });
 
-server.get('/off', (req, res) => {
-  //exec('xset dpms force off', handleExecResult(res));
-  exec('sudo tvservice -o', handleExecResult(res));
+server.get('/off', async (req, res) => {
+  try {
+    const stdout = await ScreenSwitch.off();
+    res.json({ status: stdout });
+  } catch (e) {
+    res.json({ error: e.toString() });
+  }
 });
 
 console.log(
