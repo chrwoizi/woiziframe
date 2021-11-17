@@ -79,7 +79,10 @@ server.get('/files', (req, res) => {
   );
 });
 
-server.use('/file', express.static(environment.photo.basePath));
+server.use('/file', async (req, res, next) => {
+  console.log(decodeURI(req.path));
+  return express.static(environment.photo.basePath)(req, res, next);
+});
 
 server.get('/weather', async (req, res) => {
   try {

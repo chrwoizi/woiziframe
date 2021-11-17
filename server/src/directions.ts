@@ -43,7 +43,12 @@ export async function loadDirections(
   }&mode=${mode || 'driving'}&key=${
     environment.directions.googleDirectionsApiKey
   }`;
-  console.log(url);
+  console.log(
+    url.substr(
+      0,
+      url.length - environment.directions.googleDirectionsApiKey.length
+    )
+  );
 
   const response = JSON.parse(await request(url)) as Directions;
   if (response.status === 'OK') return response;

@@ -6,13 +6,15 @@ Features:
 
 - A new photo is selected randomly every few seconds.
 
-- The screen size is limited to a 4/3 ratio.
+- The screen size can limited to a fixed ratio ([here](client/src/app/_variables.scss)).
 
 - The photo is resized to fit the screen. The remaining screen space is filled with a blurred variant of the image.
 
 - The album title is shown at the bottom of the screen.
 
 - A button toggles the fullscreen browser mode.
+
+- The mouse cursor will only be visible while the mouse is moved.
 
 - Additional data can be displayed as text on top of the photo:
 

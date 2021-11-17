@@ -36,6 +36,7 @@ function saveTokens() {
  * ?code=[code]&scope=https://www.googleapis.com/auth/calendar.readonly
  */
 export function getAuthorizationUrl() {
+  console.log('google.auth.OAuth2.generateAuthUrl');
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
@@ -48,6 +49,7 @@ export function getAuthorizationUrl() {
  */
 export async function addAuthorizationCode(code: string) {
   return new Promise<void>((resolve, reject) => {
+    console.log('google.auth.OAuth2.getToken');
     oAuth2Client.getToken(code, (err, token) => {
       try {
         if (err) {
@@ -79,6 +81,7 @@ export async function listEvents() {
   for (const token of tokens.slice()) {
     oAuth2Client.setCredentials(token);
 
+    console.log('google.auth.OAuth2.getAccessToken');
     const accessToken = await oAuth2Client.getAccessToken();
     if (!accessToken.token) {
       tokens = tokens.filter((x) => x !== token);
@@ -142,6 +145,7 @@ async function apiListCalendars() {
         auth: oAuth2Client,
       });
 
+      console.log('google.calendar.calendarList.list');
       api.calendarList.list({}, (err1, res1) => {
         if (err1) {
           reject('The calendar API returned an error: ' + err1);
@@ -159,6 +163,7 @@ async function apiListEvents(calendarId: string) {
       auth: oAuth2Client,
     });
 
+    console.log('google.calendar.events.list');
     api.events.list(
       {
         calendarId: calendarId,
