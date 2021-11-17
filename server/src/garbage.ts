@@ -12,6 +12,7 @@ export async function loadGarbage(): Promise<GarbageDisposal> {
 
   const url =
     'https://www.aha-region.de/abholtermine/abfuhrkalender?gemeinde=Uetze&von=I&bis=J';
+  console.log(url);
   const html = await request(url, {
     method: 'POST',
     form: environment.garbage.garbageFormData,

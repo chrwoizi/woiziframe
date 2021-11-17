@@ -7,7 +7,7 @@ import { sharedEnvironment } from './environment.shared';
 export const environment = {
   ...sharedEnvironment,
   production: false,
-  interval: 30000,
+  interval: 60000,
 };
 
 /*

@@ -134,7 +134,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
 
     const mm = currentHour + (this.weather.hourly[1].rain?.['1h'] || 0);
     if (mm > 0) {
-      return mm + '\u00A0mm' + i18n.weather.now;
+      return `${Math.round(mm * 10) / 10}\u00A0mm${i18n.weather.now}`;
     } else {
       return i18n.weather.noRain;
     }
@@ -144,7 +144,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
     if (!this.weather) return '';
     const mm = this.weather.daily[day].rain || 0;
     if (mm > 0) {
-      return mm + '\u00A0mm';
+      return `${Math.round(mm * 10) / 10}\u00A0mm`;
     } else {
       return i18n.weather.noRain;
     }

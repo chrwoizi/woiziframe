@@ -17,16 +17,15 @@ import { Deferred } from '../utils/deferred';
 })
 export class PhotoComponent implements AfterViewInit {
   loading = true;
-  items: DataItem[] = [];
+  item1?: DataItem;
+  item2?: DataItem;
   activeItem?: DataItem;
   nextItemLoadStatus = new Deferred();
-  onlineStatus = new Deferred();
   @ViewChild('page') page!: ElementRef;
 
   constructor(private photoQueueService: PhotoQueueService) {}
 
   async ngAfterViewInit() {
-    this.onlineStatus.resolve();
     localStorage.clear();
     this.initPhotoQueue();
   }
@@ -34,13 +33,9 @@ export class PhotoComponent implements AfterViewInit {
   private async initPhotoQueue() {
     await this.photoQueueService.initQueue();
 
-    const item1 = this.getNewPhoto();
-    const item2 = this.getNewPhoto();
-    const items = [];
-    if (item1) items.push(item1);
-    if (item2) items.push(item2);
-    this.items = items;
-    this.activeItem = this.items[0];
+    this.item1 = this.getNewPhoto();
+    this.item2 = this.getNewPhoto();
+    this.activeItem = this.item1;
     this.loading = false;
 
     // TODO: check aspect ratio of photos and render it accordingly (animation for panorama, blurred background for vertical photos).
@@ -58,13 +53,16 @@ export class PhotoComponent implements AfterViewInit {
   }
 
   async onImageError(item: DataItem) {
-    await this.onlineStatus.promise;
     if (this.activeItem === item) {
       this.nextItem();
     } else {
       const item = this.getNewPhoto();
       if (item) {
-        this.items = [this.items[0], item];
+        if (this.activeItem === this.item1) {
+          this.item2 = item;
+        } else {
+          this.item1 = item;
+        }
       }
     }
   }
@@ -138,13 +136,25 @@ export class PhotoComponent implements AfterViewInit {
   }
 
   private async nextItem() {
-    await this.onlineStatus.promise;
     await this.nextItemLoadStatus.promise;
-    this.activeItem = this.items[1];
+
+    let replace;
+    if (this.activeItem === this.item1) {
+      this.activeItem = this.item2;
+      replace = 1;
+    } else {
+      this.activeItem = this.item1;
+      replace = 2;
+    }
+
     setTimeout(() => {
       const item = this.getNewPhoto();
       if (item) {
-        this.items = [this.items[1], item];
+        if (this.activeItem === this.item1) {
+          this.item2 = item;
+        } else {
+          this.item1 = item;
+        }
       }
       this.nextItemLoadStatus = new Deferred();
       setTimeout(() => this.nextItem(), environment.interval);
@@ -203,22 +213,13 @@ export class PhotoComponent implements AfterViewInit {
   }
 
   private updateRatioTypes() {
-    this.items.forEach((item) => this.updateRatioType(item));
+    if (this.item1) this.updateRatioType(this.item1);
+    if (this.item2) this.updateRatioType(this.item2);
   }
 
   @HostListener('window:resize')
   private onResize() {
     this.updateRatioTypes();
-  }
-
-  @HostListener('window:offline')
-  private onOffline() {
-    this.onlineStatus = new Deferred();
-  }
-
-  @HostListener('window:online')
-  private onOnline() {
-    this.onlineStatus.resolve();
   }
 }
 

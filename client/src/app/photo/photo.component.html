@@ -1,28 +1,55 @@
 <div class="images-container" #page *ngIf="!loading">
   <div
     class="image-container"
-    [class.image-container__active]="item == activeItem"
-    *ngFor="let item of items"
+    [class.image-container__active]="item1 == activeItem"
+    *ngIf="item1 && item1?.photoUrl"
   >
     <img
       class="image image--backdrop"
-      [src]="item.photoUrl"
+      [src]="item1.photoUrl"
       alt="image background"
     />
     <img
       class="image"
-      [class.image--contain]="isContainType(item)"
-      [style.left.%]="getImageLeft(item)"
-      [style.top.%]="getImageTop(item)"
-      [style.width.%]="getImageWidth(item)"
-      [style.height.%]="getImageHeight(item)"
-      [src]="item.photoUrl"
-      #image
-      (error)="onImageError(item)"
-      (load)="onImageLoad(item, image)"
+      decoding="async"
+      [class.image--contain]="isContainType(item1)"
+      [style.left.%]="getImageLeft(item1)"
+      [style.top.%]="getImageTop(item1)"
+      [style.width.%]="getImageWidth(item1)"
+      [style.height.%]="getImageHeight(item1)"
+      [src]="item1.photoUrl"
+      #image1
+      (error)="onImageError(item1)"
+      (load)="onImageLoad(item1, image1)"
       alt=""
     />
-    <div class="vignette"></div>
+    <div class="vignette" *ngIf="item1 == activeItem"></div>
+  </div>
+  <div
+    class="image-container"
+    [class.image-container__active]="item2 == activeItem"
+    *ngIf="item2 && item2?.photoUrl"
+  >
+    <img
+      class="image image--backdrop"
+      [src]="item2.photoUrl"
+      alt="image background"
+    />
+    <img
+      class="image"
+      decoding="async"
+      [class.image--contain]="isContainType(item2)"
+      [style.left.%]="getImageLeft(item2)"
+      [style.top.%]="getImageTop(item2)"
+      [style.width.%]="getImageWidth(item2)"
+      [style.height.%]="getImageHeight(item2)"
+      [src]="item2.photoUrl"
+      #image2
+      (error)="onImageError(item2)"
+      (load)="onImageLoad(item2, image2)"
+      alt=""
+    />
+    <div class="vignette" *ngIf="item2 == activeItem"></div>
   </div>
   <div class="image-overlay">
     <div class="info-panel">

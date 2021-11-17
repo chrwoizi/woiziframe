@@ -21,7 +21,7 @@ export const i18n = {
   today: 'heute',
   tomorrow: 'morgen',
   weather: {
-    now: '\u00A0(2h)',
-    noRain: 'Kein\u00A0Regen',
+    now: '\u00A0für\u00A02h',
+    noRain: '0mm\u00A0für\u00A02h',
   },
 };
