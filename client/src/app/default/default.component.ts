@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-default',
@@ -7,6 +7,8 @@ import { Component, HostListener } from '@angular/core';
 })
 export class DefaultComponent {
   isInFullscreen = false;
+  cursor: string = 'none';
+  timeout?: any;
 
   toggleFullScreen() {
     if (!document.fullscreenElement) {
@@ -19,5 +21,16 @@ export class DefaultComponent {
   @HostListener('document:fullscreenchange')
   private onFullscreenchange() {
     this.isInFullscreen = !!document.fullscreenElement;
+  }
+
+  onMouseMove() {
+    this.cursor = 'default';
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = undefined;
+    }
+    this.timeout = setTimeout(() => {
+      this.cursor = 'none';
+    }, 1000);
   }
 }
