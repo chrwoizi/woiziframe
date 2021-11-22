@@ -15,6 +15,8 @@ if (process.env.NODE_ENV === 'production') {
 
 (async () => {
   try {
+    console.log('initializing on pin ' + environment.sensorPin);
+
     const sensor = new Sensor(
       environment.sensorPin,
       environment.sensorInterval
