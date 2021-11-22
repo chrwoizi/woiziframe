@@ -14,17 +14,24 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 (async () => {
-  const sensor = new Sensor(environment.sensorPin, environment.sensorInterval);
+  try {
+    const sensor = new Sensor(
+      environment.sensorPin,
+      environment.sensorInterval
+    );
 
-  sensor.on('movement', function () {
-    console.log('on');
-    ScreenSwitch.on().then(console.log);
-  });
+    sensor.on('movement', function () {
+      console.log('on');
+      ScreenSwitch.on().then(console.log);
+    });
 
-  sensor.on('stillness', function () {
-    console.log('off');
-    ScreenSwitch.off().then(console.log);
-  });
+    sensor.on('stillness', function () {
+      console.log('off');
+      ScreenSwitch.off().then(console.log);
+    });
 
-  await sensor.start();
+    await sensor.start();
+  } catch (e) {
+    console.error(e);
+  }
 })();
