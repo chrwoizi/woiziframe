@@ -17,11 +17,13 @@ if (process.env.NODE_ENV === 'production') {
   const sensor = new Sensor(environment.sensorPin, environment.sensorInterval);
 
   sensor.on('movement', function () {
-    ScreenSwitch.on();
+    console.log('on');
+    ScreenSwitch.on().then(console.log);
   });
 
   sensor.on('stillness', function () {
-    ScreenSwitch.off();
+    console.log('off');
+    ScreenSwitch.off().then(console.log);
   });
 
   await sensor.start();
