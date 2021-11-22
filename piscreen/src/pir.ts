@@ -30,7 +30,9 @@ if (process.env.NODE_ENV === 'production') {
       ScreenSwitch.off().then(console.log);
     });
 
+    console.log('starting...');
     await sensor.start();
+    console.log('ready');
   } catch (e) {
     console.error(e);
   }
