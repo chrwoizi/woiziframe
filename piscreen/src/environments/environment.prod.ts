@@ -5,6 +5,6 @@ export const environment: Environment = {
   host: '0.0.0.0',
   port: 4202,
   minOnDuration: 10000,
-  sensorPin: 12,
+  sensorPin: 14,
   sensorInterval: 100,
 };
