@@ -3,6 +3,11 @@ import { environment as prodEnvironment } from './environments/environment.prod'
 import { Sensor } from './Sensor';
 import { ScreenSwitch } from './ScreenSwitch';
 
+const log = console.log;
+console.log = (...args) => {
+  log(new Date().toISOString(), ...args);
+};
+
 let environment = devEnvironment;
 if (process.env.NODE_ENV === 'production') {
   for (let key of Object.getOwnPropertyNames(devEnvironment))
