@@ -23,12 +23,12 @@ if (process.env.NODE_ENV === 'production') {
     );
 
     sensor.on('movement', function () {
-      console.log('on');
+      console.log('motion sensor detects movement');
       ScreenSwitch.on().then(console.log);
     });
 
     sensor.on('stillness', function () {
-      console.log('off');
+      console.log('motion sensor detects stillness');
       ScreenSwitch.off().then(console.log);
     });
 
