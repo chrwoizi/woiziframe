@@ -3,7 +3,8 @@ import { environment } from './environments/environment';
 
 export class ScreenSwitch {
   static onTime?: Date;
-  static timer?: NodeJS.Timeout;
+  static offTimer?: NodeJS.Timeout;
+  static isOn = false;
 
   //private static onCommand = 'xset dpms force on';
   private static onCommand = 'sudo tvservice -p && sudo chvt 2 && sudo chvt 7';
@@ -14,16 +15,26 @@ export class ScreenSwitch {
   static async on() {
     return new Promise<string>((resolve, reject) => {
       this.onTime = new Date();
-      console.log(this.onCommand);
-      exec(this.onCommand, (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-        } else if (stderr) {
-          reject(new Error(stderr));
-        } else {
-          if (stdout) resolve(stdout);
-        }
-      });
+      if (this.offTimer) {
+        clearTimeout(this.offTimer);
+        this.offTimer = undefined;
+      }
+      if (!this.isOn) {
+        this.isOn = true;
+        console.log(this.onCommand);
+        exec(this.onCommand, (error, stdout, stderr) => {
+          if (error) {
+            reject(error);
+          } else if (stderr) {
+            reject(new Error(stderr.trim()));
+          } else {
+            this.isOn = true;
+            if (stdout) resolve(stdout.trim());
+          }
+        });
+      } else {
+        resolve(undefined);
+      }
     });
   }
 
@@ -32,12 +43,12 @@ export class ScreenSwitch {
       if (this.onTime) {
         const onDuration = new Date().getTime() - this.onTime.getTime();
         if (onDuration < environment.minOnDuration) {
-          if (this.timer) {
-            clearTimeout(this.timer);
-            this.timer = undefined;
+          if (this.offTimer) {
+            clearTimeout(this.offTimer);
+            this.offTimer = undefined;
           }
-          this.timer = setTimeout(() => {
-            this.timer = undefined;
+          this.offTimer = setTimeout(() => {
+            this.offTimer = undefined;
             this.off();
           }, environment.minOnDuration - onDuration);
           resolve(
@@ -49,16 +60,22 @@ export class ScreenSwitch {
         }
       }
 
-      console.log(this.offCommand);
-      exec(this.offCommand, (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-        } else if (stderr) {
-          reject(new Error(stderr));
-        } else {
-          if (stdout) resolve(stdout);
-        }
-      });
+      if (this.isOn) {
+        this.isOn = false;
+        console.log(this.offCommand);
+        exec(this.offCommand, (error, stdout, stderr) => {
+          if (error) {
+            reject(error);
+          } else if (stderr) {
+            reject(new Error(stderr.trim()));
+          } else {
+            this.isOn = false;
+            if (stdout) resolve(stdout.trim());
+          }
+        });
+      } else {
+        resolve(undefined);
+      }
     });
   }
 }
