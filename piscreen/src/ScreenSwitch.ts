@@ -14,13 +14,14 @@ export class ScreenSwitch {
   static async on() {
     return new Promise<string>((resolve, reject) => {
       this.onTime = new Date();
+      console.log(this.onCommand);
       exec(this.onCommand, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else if (stderr) {
           reject(new Error(stderr));
         } else {
-          resolve(stdout);
+          if (stdout) resolve(stdout);
         }
       });
     });
@@ -48,13 +49,14 @@ export class ScreenSwitch {
         }
       }
 
+      console.log(this.offCommand);
       exec(this.offCommand, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else if (stderr) {
           reject(new Error(stderr));
         } else {
-          resolve(stdout);
+          if (stdout) resolve(stdout);
         }
       });
     });
