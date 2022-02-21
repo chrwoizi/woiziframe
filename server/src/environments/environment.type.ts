@@ -15,6 +15,7 @@ export interface Environment {
     filterCalendarEvent?: (event: CalendarEvent) => boolean;
     googleCalendarClientId?: string;
     googleCalendarClientSecret?: string;
+    tokenFilePath?: string;
   };
 
   directions?: {

@@ -71,6 +71,26 @@ server.get('/files', (req, res) => {
     }
     return files;
   }
+
+  if (typeof req.query.album !== 'string') {
+    res.json([]);
+    return;
+  }
+
+  if (environment.photo.blacklist.length > 0) {
+    if (environment.photo.blacklist.indexOf(req.query.album) !== -1) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.whitelist.length > 0) {
+    if (environment.photo.whitelist.indexOf(req.query.album) === -1) {
+      res.json([]);
+      return;
+    }
+  }
+
   const allFiles = collectFiles(
     path.join(environment.photo.basePath, req.query.album || '')
   );
@@ -81,6 +101,29 @@ server.get('/files', (req, res) => {
 
 server.use('/file', async (req, res, next) => {
   console.log(decodeURI(req.path));
+
+  const split = decodeURI(req.path).split('/');
+  if (split.length < 2) {
+    res.json([]);
+    return;
+  }
+
+  const album = split[1];
+
+  if (environment.photo.blacklist.length > 0) {
+    if (environment.photo.blacklist.indexOf(album) !== -1) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.whitelist.length > 0) {
+    if (environment.photo.whitelist.indexOf(album) === -1) {
+      res.json([]);
+      return;
+    }
+  }
+
   return express.static(environment.photo.basePath)(req, res, next);
 });
 
@@ -104,7 +147,7 @@ server.get('/calendar', async (req, res) => {
 
 server.get('/calendar/auth', async (req, res) => {
   try {
-    res.json(await getAuthorizationUrl());
+    res.json(await getAuthorizationUrl(req.query.redirect as string));
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -113,7 +156,12 @@ server.get('/calendar/auth', async (req, res) => {
 
 server.get('/calendar/confirm', async (req, res) => {
   try {
-    await addAuthorizationCode(req.query.code as string);
+    if (!req.query.code) throw new Error('code param is missing');
+    if (!req.query.state) throw new Error('state param is missing');
+    await addAuthorizationCode(
+      req.query.code as string,
+      req.query.state as string
+    );
     res.sendFile(path.join(__dirname, '..', 'res', 'calendar-confirmed.html'));
   } catch (e) {
     console.log(e);
