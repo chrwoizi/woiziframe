@@ -21,6 +21,7 @@ export const environment: Environment = {
     googleCalendarClientSecret: keys.calendar.googleCalendarClientSecret,
     filterCalendarEvent: (event: CalendarEvent) =>
       !/woiziframe\s*:\s*nein/.test(event.description?.toLowerCase()),
+    tokenFilePath: 'secrets/calendar.secret.json',
   },
 
   directions: {

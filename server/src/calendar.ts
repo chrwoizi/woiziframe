@@ -1,33 +1,26 @@
 import * as fs from 'fs';
 import { Auth, calendar_v3, google } from 'googleapis';
+import * as moment from 'moment-timezone';
 import { Calendar } from '../../shared/calendar/Calendar';
 import { mock } from '../../shared/calendar/Calendar.mock';
-import { environment } from './environments/environment';
-import * as moment from 'moment-timezone';
 import { loadDirections } from './directions';
-import { CalendarEvent } from '../../shared/calendar/CalendarEvent';
+import { environment } from './environments/environment';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 
-const TOKENS_PATH = 'calendar.secret.json';
+const tokenFilePath =
+  environment.calendar.tokenFilePath ?? 'secrets/calendar.secret.json';
 
-const oAuth2Client = new google.auth.OAuth2(
-  environment.calendar.googleCalendarClientId,
-  environment.calendar.googleCalendarClientSecret,
-  `http://${
-    environment.host === '0.0.0.0' || environment.host === '127.0.0.1'
-      ? 'localhost'
-      : environment.host
-  }:${environment.port}/calendar/confirm`
-);
+function loadTokens() {
+  let tokens: Auth.Credentials[] = [];
+  try {
+    tokens = JSON.parse(fs.readFileSync(tokenFilePath).toString());
+  } catch (e) {}
+  return tokens;
+}
 
-let tokens: Auth.Credentials[] = [];
-try {
-  tokens = JSON.parse(fs.readFileSync(TOKENS_PATH).toString());
-} catch (e) {}
-
-function saveTokens() {
-  fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, undefined, 2));
+function saveTokens(tokens) {
+  fs.writeFileSync(tokenFilePath, JSON.stringify(tokens, undefined, 2));
 }
 
 /**
@@ -35,11 +28,18 @@ function saveTokens() {
  * The url asks for the permission and redirects to
  * ?code=[code]&scope=https://www.googleapis.com/auth/calendar.readonly
  */
-export function getAuthorizationUrl() {
-  console.log('google.auth.OAuth2.generateAuthUrl');
+export function getAuthorizationUrl(redirect: string) {
+  console.log('google.auth.OAuth2.generateAuthUrl', redirect);
+  const oAuth2Client = new google.auth.OAuth2(
+    environment.calendar.googleCalendarClientId,
+    environment.calendar.googleCalendarClientSecret,
+    redirect
+  );
+
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
+    state: Buffer.from(redirect, 'utf-8').toString('base64'),
   });
   return authUrl;
 }
@@ -47,9 +47,17 @@ export function getAuthorizationUrl() {
 /**
  * Store new token after prompting for user authorization
  */
-export async function addAuthorizationCode(code: string) {
+export async function addAuthorizationCode(code: string, state: string) {
   return new Promise<void>((resolve, reject) => {
-    console.log('google.auth.OAuth2.getToken');
+    console.log('google.auth.OAuth2.getToken', code, state);
+    const redirect = Buffer.from(state, 'base64').toString('utf-8');
+
+    const oAuth2Client = new google.auth.OAuth2(
+      environment.calendar.googleCalendarClientId,
+      environment.calendar.googleCalendarClientSecret,
+      redirect
+    );
+
     oAuth2Client.getToken(code, (err, token) => {
       try {
         if (err) {
@@ -59,8 +67,9 @@ export async function addAuthorizationCode(code: string) {
         }
 
         if (token) {
+          const tokens = loadTokens();
           tokens.push(token);
-          saveTokens();
+          saveTokens(tokens);
           resolve();
         } else {
           throw new Error('No token');
@@ -76,8 +85,14 @@ export async function addAuthorizationCode(code: string) {
  * Lists the next two weeks of all calendars.
  */
 export async function listEvents() {
+  const oAuth2Client = new google.auth.OAuth2(
+    environment.calendar.googleCalendarClientId,
+    environment.calendar.googleCalendarClientSecret
+  );
+
   const results: calendar_v3.Schema$Event[] = [];
 
+  let tokens = loadTokens();
   for (const token of tokens.slice()) {
     oAuth2Client.setCredentials(token);
 
@@ -85,7 +100,7 @@ export async function listEvents() {
     const accessToken = await oAuth2Client.getAccessToken();
     if (!accessToken.token) {
       tokens = tokens.filter((x) => x !== token);
-      saveTokens();
+      saveTokens(tokens);
       continue;
     }
 
@@ -94,15 +109,15 @@ export async function listEvents() {
       if (newToken.access_token !== token.access_token) {
         tokens = tokens.filter((x) => x !== token);
         tokens.push(accessToken.res.data);
-        saveTokens();
+        saveTokens(tokens);
       }
     }
 
     try {
-      const calendars = await apiListCalendars();
+      const calendars = await apiListCalendars(oAuth2Client);
 
       for (const calendar of calendars) {
-        const events = await apiListEvents(calendar.id);
+        const events = await apiListEvents(oAuth2Client, calendar.id);
 
         for (const event of events) {
           if (environment.calendar.filterCalendarEvent(event)) {
@@ -116,7 +131,7 @@ export async function listEvents() {
       // token may be invalid. remove from token list.
       console.log(e);
       tokens = tokens.filter((x) => x !== token);
-      saveTokens();
+      saveTokens(tokens);
     }
   }
 
@@ -137,7 +152,7 @@ export async function listEvents() {
   return results;
 }
 
-async function apiListCalendars() {
+async function apiListCalendars(oAuth2Client: Auth.OAuth2Client) {
   return await new Promise<calendar_v3.Schema$CalendarListEntry[]>(
     (resolve, reject) => {
       const api = google.calendar({
@@ -148,7 +163,8 @@ async function apiListCalendars() {
       console.log('google.calendar.calendarList.list');
       api.calendarList.list({}, (err1, res1) => {
         if (err1) {
-          reject('The calendar API returned an error: ' + err1);
+          reject('The calendar API returned an error: ' + err1 + '\n' + res1);
+          return;
         }
         resolve(res1.data.items.filter((x) => x.selected));
       });
@@ -156,7 +172,10 @@ async function apiListCalendars() {
   );
 }
 
-async function apiListEvents(calendarId: string) {
+async function apiListEvents(
+  oAuth2Client: Auth.OAuth2Client,
+  calendarId: string
+) {
   return await new Promise<calendar_v3.Schema$Event[]>((resolve, reject) => {
     const api = google.calendar({
       version: 'v3',
@@ -174,7 +193,8 @@ async function apiListEvents(calendarId: string) {
       },
       (err2, res2) => {
         if (err2) {
-          reject('The events API returned an error: ' + err2);
+          reject('The events API returned an error: ' + err2 + '\n' + res2);
+          return;
         }
 
         resolve(res2.data.items);

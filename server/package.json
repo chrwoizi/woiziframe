@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "nodemon",
-    "start:prod": "env NODE_ENV=production ts-node src/server.ts",
+    "start:prod": "node dist/server/src/server.js",
+    "build": "tsc",
     "add-calendar": "ts-node src/add-calendar.ts"
   },
   "private": true,
