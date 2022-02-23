@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-default',
@@ -9,6 +10,12 @@ export class DefaultComponent {
   isInFullscreen = false;
   cursor: string = 'none';
   timeout?: any;
+  showFullScreenButton = environment.showFullScreenButton;
+  showCloseButton = environment.showCloseButton;
+
+  close() {
+    window.close();
+  }
 
   toggleFullScreen() {
     if (!document.fullscreenElement) {
@@ -19,7 +26,7 @@ export class DefaultComponent {
   }
 
   @HostListener('document:fullscreenchange')
-  private onFullscreenchange() {
+  onFullscreenchange() {
     this.isInFullscreen = !!document.fullscreenElement;
   }
 

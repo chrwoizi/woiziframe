@@ -14,4 +14,7 @@ export const sharedEnvironment = {
 
   yellowTrafficFactor: 1.1,
   redTrafficFactor: 1.2,
+
+  showFullScreenButton: false,
+  showCloseButton: true,
 };

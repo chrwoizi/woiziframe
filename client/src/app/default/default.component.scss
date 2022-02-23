@@ -85,8 +85,8 @@
 .fullscreen {
   position: absolute;
   z-index: 1;
-  left: 2vh;
-  bottom: 6vh;
+  left: 0.5vh;
+  top: 0.5vh;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -101,6 +101,29 @@
 }
 
 .fullscreen svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.close {
+  position: absolute;
+  z-index: 1;
+  right: 0.5vh;
+  top: 0.5vh;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+  outline: none;
+  padding: 0;
+  opacity: 0.2;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.close svg {
   width: 2rem;
   height: 2rem;
 }
