@@ -8,20 +8,8 @@ import { Album, BatchPhotosResponse, Photo, PhotosResponse } from './types';
 export class PhotoRestService {
   constructor(private http: HttpClient) {}
 
-  private first = true;
-
   async getAlbums(): Promise<Album[]> {
     const files = await this.http.get<string[]>('/api/albums').toPromise();
-    if (this.first) {
-      this.first = false;
-      return files.slice(0, 1).map(
-        (x) =>
-          ({
-            id: x,
-            title: x,
-          } as Album)
-      );
-    }
     return files.map(
       (x) =>
         ({
