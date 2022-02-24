@@ -3,7 +3,6 @@
     {{ i18n.garbage.title }}:
   </div>
   <div class="item" *ngFor="let type of outThisEvening; let i = index">
-    <span *ngIf="i > 0">,</span>
-    &nbsp;{{ type }}
+    <span *ngIf="i > 0">,</span>&nbsp;{{ type }}
   </div>
 </div>
