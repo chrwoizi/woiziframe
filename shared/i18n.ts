@@ -3,7 +3,7 @@ export const i18n = {
     title: 'Müll\u00A0rausstellen',
     misc: 'Restmülltonne',
     organic: undefined,
-    paper: undefined,
+    paper: 'Papier',
     packaging: 'Gelbe\u00A0Säcke',
   },
   directions: {
