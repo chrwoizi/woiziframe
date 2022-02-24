@@ -14,6 +14,7 @@ import { i18n } from '../../../../shared/i18n';
 export class WeatherComponent implements OnInit, OnDestroy {
   weather?: Weather;
   private refreshInterval?: any;
+  i18n = i18n;
 
   constructor(private service: WeatherService) {}
 
@@ -133,20 +134,12 @@ export class WeatherComponent implements OnInit, OnDestroy {
       .reduce((sum: number, precipitation: number) => sum + precipitation, 0);
 
     const mm = currentHour + (this.weather.hourly[1].rain?.['1h'] || 0);
-    if (mm > 0) {
-      return `${Math.round(mm * 10) / 10}\u00A0mm${i18n.weather.now}`;
-    } else {
-      return i18n.weather.noRain;
-    }
+    return Math.round(mm * 10) / 10;
   }
 
   getDayRain(day: number) {
     if (!this.weather) return '';
     const mm = this.weather.daily[day].rain || 0;
-    if (mm > 0) {
-      return `${Math.round(mm * 10) / 10}\u00A0mm`;
-    } else {
-      return i18n.weather.noRain;
-    }
+    return Math.round(mm * 10) / 10;
   }
 }
