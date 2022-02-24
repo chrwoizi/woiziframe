@@ -2,7 +2,8 @@
   <div class="item" *ngIf="outThisEvening && outThisEvening.length > 0">
     {{ i18n.garbage.title }}:
   </div>
-  <div class="item" *ngFor="let type of outThisEvening">
-    {{ type }}
+  <div class="item" *ngFor="let type of outThisEvening; let i = index">
+    <span *ngIf="i > 0">,</span>
+    &nbsp;{{ type }}
   </div>
 </div>
