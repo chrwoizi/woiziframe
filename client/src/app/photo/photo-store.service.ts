@@ -49,6 +49,10 @@ export class PhotoStoreService {
       return this.albumsPromise;
     }
 
+    return this.reloadStore();
+  }
+
+  public async reloadStore() {
     let albums = this.storageService.getAlbums();
     if (albums) {
       // Continue immediately but update store with new albums later.
@@ -70,23 +74,17 @@ export class PhotoStoreService {
     if (!albums || albums.length === this.storeItems.length) {
       return;
     }
+    if (this.albumsEqual(albums, this.storeItems)) {
+      return;
+    }
+
     this.storageService.set(this.storageService.albumsKey, albums);
 
-    const itemsMap = this.storeItems.reduce(
-      (map, item) => map.set(item.id, item),
-      new Map()
-    );
-    albums.forEach((album) => {
-      if (!itemsMap.has(album.id)) {
-        this.storeItems.push({
-          id: album.id,
-          album,
-          photos: [],
-        });
-      } else {
-        itemsMap.get(album.id).album = album;
-      }
-    });
+    this.storeItems = albums.map((album) => ({
+      id: album.id,
+      album,
+      photos: [],
+    }));
   }
 
   /** Downloads photos for given {storeItem}. */
@@ -122,5 +120,15 @@ export class PhotoStoreService {
 
   private getRandomIndex(max = this.storeItems.length - 1, min = 0) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  private albumsEqual(albums: Album[], storeItems: StoreItem[]) {
+    if (albums?.length !== storeItems?.length) {
+      return false;
+    }
+    if (albums.some((x) => !storeItems.find((y) => x.id === y.id))) {
+      return false;
+    }
+    return true;
   }
 }
