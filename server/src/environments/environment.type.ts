@@ -42,6 +42,8 @@ export interface Environment {
     basePath?: string;
     whitelist?: string[];
     blacklist?: string[];
+    whitelistFile?: string;
+    blacklistFile?: string;
   };
 
   weather?: {
