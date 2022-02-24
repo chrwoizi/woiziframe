@@ -45,14 +45,37 @@ server.get('/albums', (req, res) => {
     .filter((x: any) =>
       fs.statSync(path.join(environment.photo.basePath, x)).isDirectory()
     );
-  if (environment.photo.whitelist.length > 0) {
+  if (environment.photo.whitelist?.length > 0) {
     albums = albums.filter(
       (x: any) => environment.photo.whitelist.indexOf(x) !== -1
     );
   }
-  if (environment.photo.blacklist.length > 0) {
+  if (environment.photo.blacklist?.length > 0) {
     albums = albums.filter(
       (x: any) => environment.photo.blacklist.indexOf(x) === -1
+    );
+  }
+  if (environment.photo.whitelistFile) {
+    albums = albums.filter((x) =>
+      fs.existsSync(
+        path.join(
+          environment.photo.basePath,
+          x,
+          environment.photo.whitelistFile
+        )
+      )
+    );
+  }
+  if (environment.photo.blacklistFile) {
+    albums = albums.filter(
+      (x) =>
+        !fs.existsSync(
+          path.join(
+            environment.photo.basePath,
+            x,
+            environment.photo.blacklistFile
+          )
+        )
     );
   }
   res.json(albums);
@@ -77,15 +100,45 @@ server.get('/files', (req, res) => {
     return;
   }
 
-  if (environment.photo.blacklist.length > 0) {
+  if (environment.photo.whitelist?.length > 0) {
+    if (environment.photo.whitelist.indexOf(req.query.album) === -1) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.blacklist?.length > 0) {
     if (environment.photo.blacklist.indexOf(req.query.album) !== -1) {
       res.json([]);
       return;
     }
   }
 
-  if (environment.photo.whitelist.length > 0) {
-    if (environment.photo.whitelist.indexOf(req.query.album) === -1) {
+  if (environment.photo.whitelistFile) {
+    if (
+      !fs.existsSync(
+        path.join(
+          environment.photo.basePath,
+          req.query.album,
+          environment.photo.whitelistFile
+        )
+      )
+    ) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.blacklistFile) {
+    if (
+      fs.existsSync(
+        path.join(
+          environment.photo.basePath,
+          req.query.album,
+          environment.photo.blacklistFile
+        )
+      )
+    ) {
       res.json([]);
       return;
     }
@@ -110,15 +163,45 @@ server.use('/file', async (req, res, next) => {
 
   const album = split[1];
 
-  if (environment.photo.blacklist.length > 0) {
+  if (environment.photo.whitelist?.length > 0) {
+    if (environment.photo.whitelist.indexOf(album) === -1) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.blacklist?.length > 0) {
     if (environment.photo.blacklist.indexOf(album) !== -1) {
       res.json([]);
       return;
     }
   }
 
-  if (environment.photo.whitelist.length > 0) {
-    if (environment.photo.whitelist.indexOf(album) === -1) {
+  if (environment.photo.whitelistFile) {
+    if (
+      !fs.existsSync(
+        path.join(
+          environment.photo.basePath,
+          album,
+          environment.photo.whitelistFile
+        )
+      )
+    ) {
+      res.json([]);
+      return;
+    }
+  }
+
+  if (environment.photo.blacklistFile) {
+    if (
+      fs.existsSync(
+        path.join(
+          environment.photo.basePath,
+          album,
+          environment.photo.blacklistFile
+        )
+      )
+    ) {
       res.json([]);
       return;
     }
