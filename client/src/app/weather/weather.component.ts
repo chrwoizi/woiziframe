@@ -123,7 +123,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
   }
 
   getCurrentRain() {
-    if (!this.weather?.minutely || !this.weather?.hourly) return '';
+    if (!this.weather?.minutely || !this.weather?.hourly) return -1;
 
     const nextHour = this.weather.hourly[1].dt;
     const remainingMinutes = this.weather.minutely.filter(
@@ -138,7 +138,7 @@ export class WeatherComponent implements OnInit, OnDestroy {
   }
 
   getDayRain(day: number) {
-    if (!this.weather) return '';
+    if (!this.weather) return -1;
     const mm = this.weather.daily[day].rain || 0;
     return Math.round(mm * 10) / 10;
   }

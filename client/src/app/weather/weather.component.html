@@ -17,7 +17,7 @@
     <div class="rain" *ngIf="getCurrentRain() > 0">
       {{ getCurrentRain() }}&nbsp;{{ i18n.weather.now }}
     </div>
-    <div class="no-rain" *ngIf="getCurrentRain() <= 0">
+    <div class="no-rain" *ngIf="getCurrentRain() == 0">
       {{ i18n.weather.noRain }}
     </div>
   </div>
@@ -40,7 +40,7 @@
     <div class="rain" *ngIf="getDayRain(1) > 0">
       {{ getDayRain(1) }}&nbsp;{{ i18n.weather.day }}
     </div>
-    <div class="rain" *ngIf="getDayRain(1) <= 0">
+    <div class="rain" *ngIf="getDayRain(1) == 0">
       {{ i18n.weather.noRain }}
     </div>
   </div>
