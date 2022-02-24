@@ -3,31 +3,51 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { PhotoQueueService } from '../photo/photo-queue.service';
 import { MediaItem } from '../photo/types';
 import { Deferred } from '../utils/deferred';
+import { PhotoStoreService } from './photo-store.service';
 
 @Component({
   selector: 'app-photo',
   templateUrl: './photo.component.html',
   styleUrls: ['./photo.component.scss', '../spinner.scss'],
 })
-export class PhotoComponent implements AfterViewInit {
+export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
   loading = true;
   item1?: DataItem;
   item2?: DataItem;
   activeItem?: DataItem;
   nextItemLoadStatus = new Deferred();
+  private refreshInterval?: any;
   @ViewChild('page') page!: ElementRef;
 
-  constructor(private photoQueueService: PhotoQueueService) {}
+  constructor(
+    private photoQueueService: PhotoQueueService,
+    private photoStoreService: PhotoStoreService
+  ) {}
 
   async ngAfterViewInit() {
     localStorage.clear();
     this.initPhotoQueue();
+  }
+
+  ngOnInit() {
+    this.refreshInterval = setInterval(
+      () => this.photoStoreService.reloadStore(),
+      environment.garbageRefreshIntervalMinutes * 60 * 1000
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   private async initPhotoQueue() {
@@ -138,13 +158,10 @@ export class PhotoComponent implements AfterViewInit {
   private async nextItem() {
     await this.nextItemLoadStatus.promise;
 
-    let replace;
     if (this.activeItem === this.item1) {
       this.activeItem = this.item2;
-      replace = 1;
     } else {
       this.activeItem = this.item1;
-      replace = 2;
     }
 
     setTimeout(() => {

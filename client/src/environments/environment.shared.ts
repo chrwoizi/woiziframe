@@ -4,6 +4,7 @@ export const sharedEnvironment = {
    */
   maxCrop: 0.34,
 
+  photoRefreshIntervalMinutes: 10,
   weatherRefreshIntervalMinutes: 10,
   calendarRefreshIntervalMinutes: 10,
   garbageRefreshIntervalMinutes: 24 * 60,
