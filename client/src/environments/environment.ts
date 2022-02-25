@@ -7,7 +7,9 @@ import { sharedEnvironment } from './environment.shared';
 export const environment = {
   ...sharedEnvironment,
   production: false,
-  interval: 10000,
+  interval: 5000,
+  screenStatusInterval: 1000,
+  screenStatusUrl: '/piscreen/status',
 };
 
 /*

@@ -12,6 +12,7 @@ import { PhotoQueueService } from '../photo/photo-queue.service';
 import { MediaItem } from '../photo/types';
 import { Deferred } from '../utils/deferred';
 import { PhotoStoreService } from './photo-store.service';
+import { ScreenService } from './screen.service';
 
 @Component({
   selector: 'app-photo',
@@ -26,10 +27,14 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
   nextItemLoadStatus = new Deferred();
   private refreshInterval?: any;
   @ViewChild('page') page!: ElementRef;
+  private nextItemTimeout?: any;
+  private screenStatusInterval?: any;
+  private isScreenOn?: boolean;
 
   constructor(
     private photoQueueService: PhotoQueueService,
-    private photoStoreService: PhotoStoreService
+    private photoStoreService: PhotoStoreService,
+    private screenService: ScreenService
   ) {}
 
   async ngAfterViewInit() {
@@ -48,6 +53,23 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
     }
+    if (this.screenStatusInterval) {
+      clearInterval(this.screenStatusInterval);
+    }
+    if (this.nextItemTimeout) {
+      clearTimeout(this.nextItemTimeout);
+    }
+  }
+
+  private async updateScreenStatus() {
+    const on = await this.screenService.isScreenOn();
+    const old = this.isScreenOn;
+    this.isScreenOn = on;
+    if (old && !on) {
+      this.nextItemNow();
+    } else if (!old && on) {
+      this.startNextItemTimeout();
+    }
   }
 
   private async initPhotoQueue() {
@@ -58,8 +80,15 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.activeItem = this.item1;
     this.loading = false;
 
-    // TODO: check aspect ratio of photos and render it accordingly (animation for panorama, blurred background for vertical photos).
-    setTimeout(() => this.nextItem(), environment.interval);
+    if (!environment.screenStatusUrl) {
+      this.isScreenOn = true;
+      this.startNextItemTimeout();
+    }
+
+    this.screenStatusInterval = setInterval(
+      () => this.updateScreenStatus(),
+      environment.screenStatusInterval
+    );
   }
 
   onImageLoad(item: DataItem, image: HTMLImageElement) {
@@ -164,18 +193,37 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
       this.activeItem = this.item1;
     }
 
-    setTimeout(() => {
-      const item = this.getNewPhoto();
-      if (item) {
-        if (this.activeItem === this.item1) {
-          this.item2 = item;
-        } else {
-          this.item1 = item;
-        }
+    const item = this.getNewPhoto();
+    if (item) {
+      if (this.activeItem === this.item1) {
+        this.item2 = item;
+      } else {
+        this.item1 = item;
       }
-      this.nextItemLoadStatus = new Deferred();
-      setTimeout(() => this.nextItem(), environment.interval);
-    }, 900);
+    }
+
+    this.nextItemLoadStatus = new Deferred();
+
+    if (this.isScreenOn) {
+      this.startNextItemTimeout();
+    }
+  }
+
+  private nextItemNow() {
+    if (this.nextItemTimeout) {
+      clearTimeout(this.nextItemTimeout);
+      this.nextItemTimeout = undefined;
+    }
+    this.nextItem();
+  }
+
+  private startNextItemTimeout() {
+    if (!this.nextItemTimeout) {
+      this.nextItemTimeout = setTimeout(() => {
+        this.nextItemTimeout = undefined;
+        this.nextItem();
+      }, environment.interval);
+    }
   }
 
   private getNewPhoto(): DataItem | undefined {
@@ -235,7 +283,7 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   @HostListener('window:resize')
-  private onResize() {
+  onResize() {
     this.updateRatioTypes();
   }
 }
