@@ -34,11 +34,12 @@ export class PhotoStoreService {
     }
     const index = this.getRandomIndex(item.photos.length - 1);
     const id = item.photos.splice(index, 1)[0];
+    if (id) {
+      const photos = await this.photoRestService.getPhotos([id]);
 
-    const photos = await this.photoRestService.getPhotos([id]);
-
-    if (photos.mediaItemResults?.length > 0) {
-      return photos.mediaItemResults[0].mediaItem;
+      if (photos.mediaItemResults?.length > 0) {
+        return photos.mediaItemResults[0].mediaItem;
+      }
     }
     return undefined;
   }
