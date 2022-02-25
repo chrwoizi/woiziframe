@@ -42,7 +42,6 @@ export class DirectionsComponent implements OnInit, OnDestroy {
   refresh() {
     this.service.get().then((x) => {
       this.directions = x || [];
-      console.log(x);
     });
   }
 
