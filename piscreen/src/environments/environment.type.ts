@@ -5,4 +5,8 @@ export interface Environment {
   minOnDuration: number;
   sensorPin: number;
   sensorInterval: number;
+  mockSensor: boolean;
+  mockSensorInterval?: number;
+  onCommand: string;
+  offCommand: string;
 }

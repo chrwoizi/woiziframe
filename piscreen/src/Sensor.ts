@@ -1,5 +1,12 @@
-import * as gpio from 'rpi-gpio';
+import gpio from 'rpi-gpio';
 import { EventEmitter } from 'events';
+import { environment } from './environments/environment';
+import { gpioMock } from './GpioMock';
+
+const g = environment.mockSensor ? gpioMock : gpio;
+if (environment.mockSensor) {
+  console.log('mocking gpio');
+}
 
 export class Sensor extends EventEmitter {
   movement = false;
@@ -17,23 +24,19 @@ export class Sensor extends EventEmitter {
 
   async start(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      gpio.setMode(gpio.MODE_RPI);
+      g.setMode(g.MODE_RPI);
 
-      gpio.setup(
-        this.pin,
-        gpio.DIR_IN,
-        (err?: Error | null, value?: boolean) => {
-          if (err) {
-            reject(err);
-            return undefined;
-          }
-
-          this.interval = setInterval(() => this.readPir(), this.loop);
-          resolve();
-
-          return this.interval;
+      g.setup(this.pin, g.DIR_IN, (err?: Error | null, value?: boolean) => {
+        if (err) {
+          reject(err);
+          return undefined;
         }
-      );
+
+        this.interval = setInterval(() => this.readPir(), this.loop);
+        resolve();
+
+        return this.interval;
+      });
     });
   }
 
@@ -49,7 +52,7 @@ export class Sensor extends EventEmitter {
   }
 
   readPir() {
-    gpio.read(this.pin, (err?: Error | null, value?: boolean) => {
+    g.read(this.pin, (err?: Error | null, value?: boolean) => {
       if (err) {
         console.error(err);
       }
