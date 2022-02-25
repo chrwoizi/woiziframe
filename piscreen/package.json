@@ -2,10 +2,8 @@
   "name": "woiziframe-piscreen",
   "version": "0.0.0",
   "scripts": {
-    "pir": "ts-node src/pir.ts",
-    "pir:prod": "env NODE_ENV=production ts-node src/pir.ts",
-    "server": "ts-node src/server.ts",
-    "server:prod": "env NODE_ENV=production ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "start:prod": "env NODE_ENV=production ts-node src/server.ts"
   },
   "private": true,
   "dependencies": {
