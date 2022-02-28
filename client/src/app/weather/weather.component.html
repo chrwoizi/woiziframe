@@ -28,7 +28,12 @@
     ></app-weather-icon>
     <div class="date">{{ getDate(0) }}</div>
     <div class="temperature">{{ getDayTemperature(0) }}</div>
-    <div class="no-rain">{{ getDayRain(0) }}</div>
+    <div class="rain" *ngIf="getDayRain(1) > 0">
+      {{ getDayRain(1) }}&nbsp;{{ i18n.weather.day }}
+    </div>
+    <div class="no-rain" *ngIf="getDayRain(1) == 0">
+      {{ i18n.weather.noRain }}
+    </div>
   </div>
   <div class="flex flex-column flex-start day">
     <app-weather-icon
@@ -40,7 +45,7 @@
     <div class="rain" *ngIf="getDayRain(1) > 0">
       {{ getDayRain(1) }}&nbsp;{{ i18n.weather.day }}
     </div>
-    <div class="rain" *ngIf="getDayRain(1) == 0">
+    <div class="no-rain" *ngIf="getDayRain(1) == 0">
       {{ i18n.weather.noRain }}
     </div>
   </div>
