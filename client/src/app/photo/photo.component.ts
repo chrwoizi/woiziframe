@@ -200,9 +200,8 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
       } else {
         this.item1 = item;
       }
+      this.nextItemLoadStatus = new Deferred();
     }
-
-    this.nextItemLoadStatus = new Deferred();
 
     if (this.isScreenOn) {
       this.startNextItemTimeout();
