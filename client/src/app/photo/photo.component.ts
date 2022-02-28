@@ -10,7 +10,6 @@ import {
 import { environment } from 'src/environments/environment';
 import { PhotoQueueService } from '../photo/photo-queue.service';
 import { MediaItem } from '../photo/types';
-import { Deferred } from '../utils/deferred';
 import { PhotoStoreService } from './photo-store.service';
 import { ScreenService } from './screen.service';
 
@@ -20,13 +19,14 @@ import { ScreenService } from './screen.service';
   styleUrls: ['./photo.component.scss', '../spinner.scss'],
 })
 export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild('page') page!: ElementRef;
+
   loading = true;
+
   item1?: DataItem;
   item2?: DataItem;
   activeItem?: DataItem;
-  nextItemLoadStatus = new Deferred();
   private refreshInterval?: any;
-  @ViewChild('page') page!: ElementRef;
   private nextItemTimeout?: any;
   private screenStatusInterval?: any;
   private isScreenOn?: boolean;
@@ -95,10 +95,6 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
     item.mediaItem.photo.mediaMetadata.width = image.naturalWidth.toString();
     item.mediaItem.photo.mediaMetadata.height = image.naturalHeight.toString();
     this.updateRatioType(item);
-
-    if (this.activeItem !== item) {
-      this.nextItemLoadStatus.resolve();
-    }
   }
 
   async onImageError(item: DataItem) {
@@ -185,8 +181,6 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private async nextItem() {
-    await this.nextItemLoadStatus.promise;
-
     if (this.activeItem === this.item1) {
       this.activeItem = this.item2;
     } else {
@@ -200,7 +194,6 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
       } else {
         this.item1 = item;
       }
-      this.nextItemLoadStatus = new Deferred();
     }
 
     if (this.isScreenOn) {
