@@ -41,6 +41,7 @@ server.get('/off', async (req, res) => {
 });
 
 server.get('/status', async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.json({ on: isOn });
 });
 
