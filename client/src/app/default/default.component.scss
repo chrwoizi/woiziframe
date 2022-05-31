@@ -19,6 +19,7 @@
 
 .page {
   left: calc(#{$left} * 1vh);
+  top: calc(#{$top} * 1vh);
 }
 
 .image-container {
