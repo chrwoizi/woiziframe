@@ -36,6 +36,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Use [piscreen](piscreen/README.md) to switch the raspberry pi display on or off based on motion detection or web api.
 
+## Configuration
+
+Set the screen aspect ratio, padding, and offset in [_variables.scss_](client/src/app/_variables.scss).
+
 ## Development server
 
 Run `cd client; npm start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
