@@ -12,9 +12,13 @@
 
 .images-container,
 .page {
-  width: calc(#{$aspect_h} * 100vh / #{$aspect_v});
-  height: calc(100vh);
+  width: calc(#{$aspect_h} * 100vh / #{$aspect_v} - #{$padding} * 2vh);
+  height: calc(100vh - #{$padding} * 2vh);
   position: relative;
+}
+
+.page {
+  left: calc(#{$left} * 1vh);
 }
 
 .image-container {
