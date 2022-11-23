@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon",
     "start:prod": "node dist/server/src/server.js",
-    "build": "tsc",
+    "build": "tsc && cp -r res ./dist/",
     "add-calendar": "ts-node src/add-calendar.ts"
   },
   "private": true,
