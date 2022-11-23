@@ -36,9 +36,9 @@ export class ClockComponent implements AfterViewInit {
 
   refresh() {
     var date = new Date();
-    var getSeconds = date.getSeconds() / 60;
-    var getMinutes = date.getMinutes() / 60;
-    var getHours = date.getHours() / 12;
+    var seconds = date.getSeconds() / 60;
+    var minutes = (date.getMinutes() + seconds) / 60;
+    var hours = (date.getHours() + minutes) / 12;
     const m = moment(date).locale(environment.locale);
     this.date = m.format(i18n.dateFormatLong);
     this.time = m.format(i18n.timeFormatLong);
@@ -47,17 +47,17 @@ export class ClockComponent implements AfterViewInit {
       this.renderer.setStyle(
         this.secondHand.nativeElement,
         'transform',
-        'rotate(' + getSeconds * 360 + 'deg)'
+        'rotate(' + seconds * 360 + 'deg)'
       );
       this.renderer.setStyle(
         this.minHand.nativeElement,
         'transform',
-        'rotate(' + getMinutes * 360 + 'deg)'
+        'rotate(' + minutes * 360 + 'deg)'
       );
       this.renderer.setStyle(
         this.hourHand.nativeElement,
         'transform',
-        'rotate(' + getHours * 360 + 'deg)'
+        'rotate(' + hours * 360 + 'deg)'
       );
     }
   }

@@ -1,4 +1,4 @@
-import gpio from 'rpi-gpio';
+import * as gpio from 'rpi-gpio';
 import { EventEmitter } from 'events';
 import { environment } from './environments/environment';
 import { gpioMock } from './GpioMock';
