@@ -11,6 +11,7 @@ export interface Environment {
   timezone?: string;
 
   calendar?: {
+    enabled: boolean;
     mockCalendar?: boolean;
     filterCalendarEvent?: (event: CalendarEvent) => boolean;
     googleCalendarClientId?: string;
@@ -19,6 +20,7 @@ export interface Environment {
   };
 
   directions?: {
+    enabled: boolean;
     mockDirections?: boolean;
     workDirections?: DirectionsQuery[];
     googleDirectionsApiKey?: string;
@@ -26,6 +28,7 @@ export interface Environment {
   };
 
   garbage?: {
+    enabled: boolean;
     mockGarbage?: boolean;
     garbageFormData?: {
       aktion: string;
@@ -47,6 +50,7 @@ export interface Environment {
   };
 
   weather?: {
+    enabled: boolean;
     mockWeather?: boolean;
     openWeatherApiKey?: string;
   };

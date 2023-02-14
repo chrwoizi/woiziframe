@@ -7,26 +7,15 @@ import {
   loadCalendar,
 } from './calendar';
 import { loadDirections } from './directions';
-import { environment as devEnvironment } from './environments/environment';
-import { environment as prodEnvironment } from './environments/environment.prod';
+import { environment } from './environments/environment';
 import { loadGarbage } from './garbage';
 import { loadWeather } from './weather';
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
 const server = express();
-const bodyParser = require('body-parser');
+import * as bodyParser from 'body-parser';
 
 server.use(bodyParser.json());
-
-let environment = devEnvironment;
-if (process.env.NODE_ENV === 'production') {
-  for (let key of Object.getOwnPropertyNames(devEnvironment))
-    delete devEnvironment[key];
-  Object.assign(devEnvironment, prodEnvironment);
-
-  environment = prodEnvironment;
-  console.log('PROD');
-}
 
 const extensions = ['.jpg', '.jpeg', '.png', '.tif', '.tiff'];
 
@@ -211,6 +200,7 @@ server.use('/file', async (req, res, next) => {
 });
 
 server.get('/weather', async (req, res) => {
+  if (!environment.weather?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadWeather());
   } catch (e) {
@@ -220,6 +210,7 @@ server.get('/weather', async (req, res) => {
 });
 
 server.get('/calendar', async (req, res) => {
+  if (!environment.calendar?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadCalendar());
   } catch (e) {
@@ -253,6 +244,7 @@ server.get('/calendar/confirm', async (req, res) => {
 });
 
 server.get('/garbage', async (req, res) => {
+  if (!environment.garbage?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadGarbage());
   } catch (e) {
@@ -262,6 +254,7 @@ server.get('/garbage', async (req, res) => {
 });
 
 server.get('/directions', async (req, res) => {
+  if (!environment.directions?.enabled) return res.sendStatus(404);
   try {
     const now = moment.tz(environment.timezone);
 
@@ -298,6 +291,8 @@ server.get('/directions', async (req, res) => {
   }
 });
 
-console.log('Server is running');
+console.log(
+  'Server is running on ' + environment.host + ':' + environment.port
+);
 
 server.listen(environment.port, environment.host);
