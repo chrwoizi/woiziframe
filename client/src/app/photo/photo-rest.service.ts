@@ -10,7 +10,7 @@ export class PhotoRestService {
 
   async getAlbums(): Promise<Album[]> {
     const files = await this.http.get<string[]>('/api/albums').toPromise();
-    return files.map(
+    return files!.map(
       (x) =>
         ({
           id: x,
@@ -24,7 +24,7 @@ export class PhotoRestService {
       .get<string[]>('/api/files?album=' + albumId)
       .toPromise();
     return {
-      mediaItems: files.map((x) => this.createPhotoFromFilename(x)),
+      mediaItems: files!.map((x) => this.createPhotoFromFilename(x)),
     } as PhotosResponse;
   }
 

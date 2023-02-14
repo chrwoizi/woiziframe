@@ -9,6 +9,8 @@ export class DirectionsService {
   constructor(private http: HttpClient) {}
 
   async get(): Promise<WorkDirection[]> {
-    return await this.http.get<WorkDirection[]>(`/api/directions`).toPromise();
+    return (await this.http
+      .get<WorkDirection[]>(`/api/directions`)
+      .toPromise()) as WorkDirection[];
   }
 }

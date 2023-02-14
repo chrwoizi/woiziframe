@@ -16,6 +16,7 @@ const server = express();
 import * as bodyParser from 'body-parser';
 
 server.use(bodyParser.json());
+server.use(express.static(path.join(__dirname, '..', '..', 'client')));
 
 const extensions = ['.jpg', '.jpeg', '.png', '.tif', '.tiff'];
 
@@ -28,7 +29,7 @@ function findFiles(dir: string) {
     );
 }
 
-server.get('/albums', (req, res) => {
+server.get('/api/albums', (req, res) => {
   let albums = fs
     .readdirSync(environment.photo.basePath)
     .filter((x: any) =>
@@ -70,7 +71,7 @@ server.get('/albums', (req, res) => {
   res.json(albums);
 });
 
-server.get('/files', (req, res) => {
+server.get('/api/files', (req, res) => {
   function collectFiles(dir: string) {
     const dirs = fs
       .readdirSync(dir)
@@ -141,7 +142,7 @@ server.get('/files', (req, res) => {
   );
 });
 
-server.use('/file', async (req, res, next) => {
+server.use('/api/file', async (req, res, next) => {
   console.log(decodeURI(req.path));
 
   const split = decodeURI(req.path).split('/');
@@ -199,7 +200,7 @@ server.use('/file', async (req, res, next) => {
   return express.static(environment.photo.basePath)(req, res, next);
 });
 
-server.get('/weather', async (req, res) => {
+server.get('/api/weather', async (req, res) => {
   if (!environment.weather?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadWeather());
@@ -209,7 +210,7 @@ server.get('/weather', async (req, res) => {
   }
 });
 
-server.get('/calendar', async (req, res) => {
+server.get('/api/calendar', async (req, res) => {
   if (!environment.calendar?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadCalendar());
@@ -219,7 +220,7 @@ server.get('/calendar', async (req, res) => {
   }
 });
 
-server.get('/calendar/auth', async (req, res) => {
+server.get('/api/calendar/auth', async (req, res) => {
   try {
     res.json(await getAuthorizationUrl(req.query.redirect as string));
   } catch (e) {
@@ -228,7 +229,7 @@ server.get('/calendar/auth', async (req, res) => {
   }
 });
 
-server.get('/calendar/confirm', async (req, res) => {
+server.get('/api/calendar/confirm', async (req, res) => {
   try {
     if (!req.query.code) throw new Error('code param is missing');
     if (!req.query.state) throw new Error('state param is missing');
@@ -243,7 +244,7 @@ server.get('/calendar/confirm', async (req, res) => {
   }
 });
 
-server.get('/garbage', async (req, res) => {
+server.get('/api/garbage', async (req, res) => {
   if (!environment.garbage?.enabled) return res.sendStatus(404);
   try {
     res.json(await loadGarbage());
@@ -253,7 +254,7 @@ server.get('/garbage', async (req, res) => {
   }
 });
 
-server.get('/directions', async (req, res) => {
+server.get('/api/directions', async (req, res) => {
   if (!environment.directions?.enabled) return res.sendStatus(404);
   try {
     const now = moment.tz(environment.timezone);

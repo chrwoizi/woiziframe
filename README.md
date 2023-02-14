@@ -32,36 +32,65 @@ Features:
 
 This project is based on The Google Photos client [anton-lunev/photo-frame](https://github.com/anton-lunev/photo-frame) and the weather widget [krzysztofsaja/angular-weather-widget](https://github.com/krzysztofsaja/angular-weather-widget)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.4.
-
 Use [piscreen](piscreen/README.md) to switch the raspberry pi display on or off based on motion detection or web api.
+
+## Deployment
+
+Build the docker image:
+`docker build -t woiziframe .`
+
+Start the docker container:
+`docker run -p 4201:4201 -v /path/to/photos:/woiziframe/pictures woiziframe`
 
 ## Configuration
 
 Set the screen aspect ratio, padding, and offset in [_variables.scss_](client/src/app/_variables.scss).
 
+Configuration is pulled from (in order):
+
+- environment variables
+- `server/.prod.env`
+- `server/.prod.secret.env`
+- `server/.env`
+
+| variable                        | description                                                                                                | default       |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------- |
+| HOST                            | The host name or ip address to serve from                                                                  | 0.0.0.0       |
+| PORT                            | The port to serve from                                                                                     | 4201          |
+| LOCATION_LATITUDE               | The location latitude of the device. This is used for weather and directions.                              | 52.477093     |
+| LOCATION_LONGITUDE              | The location latitude of the device. This is used for weather and directions.                              | 10.090432     |
+| LOCALE                          | The locale                                                                                                 | de            |
+| TIMEZONE                        | The timezone                                                                                               | Europe/Berlin |
+| PHOTO_BASE_PATH                 | The file path to the photo albums                                                                          | pictures      |
+| PHOTO_BLACKLIST                 | Hide albums that contain a .woiziframe-ignore file.                                                        | true          |
+| PHOTO_WHITELIST                 | Hide albums that do not contain a .woiziframe-include file.                                                | false         |
+| CALENDAR_ENABLED                | Query the Google Calendar API                                                                              | false         |
+| CALENDAR_MOCK                   | Use calendar mock data                                                                                     |               |
+| GOOGLE_CALENDAR_CLIENT_ID       | The Google Calendar API client ID. Generate a new one at https://console.cloud.google.com/apis/credentials |               |
+| GOOGLE_CALENDAR_CLIENT_SECRET   | The Google Calendar API secret. Generate a new one at https://console.cloud.google.com/apis/credentials    |               |
+| DIRECTIONS_ENABLED              | Query the Google Directions API (Goole Maps) to show traffic information                                   |               |
+| DIRECTIONS_MOCK                 | Use directions mock data                                                                                   |               |
+| GOOGLE_DIRECTIONS_API_KEY       | The Google Directions API key. Generate a new one at https://console.cloud.google.com/apis/credentials     |               |
+| DIRECTIONS_PERSON_0_NAME        | Name of the person who is interested in the traffic information                                            |               |
+| DIRECTIONS_PERSON_0_ORIGIN      | Origin of travel                                                                                           |               |
+| DIRECTIONS_PERSON_0_DESTINATION | Destination of travel                                                                                      |               |
+| DIRECTIONS_PERSON_0_MODE        | Mode of travel, e.g. `driving`, `transit`                                                                  |               |
+| DIRECTIONS_PERSON_0_WEEKDAYS    | Weekdays as array, e.g. `[1,2,3,4,5]` for monday through friday                                            |               |
+| DIRECTIONS_PERSON_0_FROM_HOURS  | Starting time for displaying the traffic information, e.g. `7` for 7 AM                                    |               |
+| DIRECTIONS_PERSON_0_TO_HOURS    | End time for displaying the traffic information in hours, e.g. `12` for noon                               |               |
+| GARBAGE_ENABLED                 | Query aha-region.de for garbage collection days                                                            | false         |
+| GARBAGE_MOCK                    | Use garbage collection mock data                                                                           |               |
+| GARBAGE_MUNICIPALITY            | See the payload of the abfuhrkalender endpoint                                                             |               |
+| GARBAGE_STREET_LETTER           | See the payload of the abfuhrkalender endpoint                                                             |               |
+| GARBAGE_STREET_CODE             | See the payload of the abfuhrkalender endpoint                                                             |               |
+| GARBAGE_HOUSE_NUMBER            | See the payload of the abfuhrkalender endpoint                                                             |               |
+| GARBAGE_PICKUP_LOCATION_CODE    | See the payload of the abfuhrkalender endpoint                                                             |               |
+| WEATHER_ENABLED                 | Query openweathermap.org for weather information                                                           | false         |
+| WEATHER_MOCK                    | Use weather mock data                                                                                      |               |
+| OPEN_WEATHER_API_KEY            | The openweathermap.org API key. Generate a new one at https://openweathermap.org/appid                     |               |
+
 ## Development server
 
 Run `cd client; npm start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Run `cd server; npm start` for a backend server. Navigate to `http://localhost:4201/albums` or `http://localhost:4201/files?album=[albumname]` or `http://localhost:4201/file/[albumname]/[filename]`.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Run `cd server; npm start` for a backend server. Navigate to `http://localhost:4201/api/albums` or `http://localhost:4201/api/files?album=[albumname]` or `http://localhost:4201/api/file/[albumname]/[filename]`.
