@@ -9,6 +9,8 @@ export class CalendarService {
   constructor(private http: HttpClient) {}
 
   async get(): Promise<Calendar> {
-    return await this.http.get<Calendar>(`/api/calendar`).toPromise();
+    return (await this.http
+      .get<Calendar>(`/api/calendar`)
+      .toPromise()) as Calendar;
   }
 }

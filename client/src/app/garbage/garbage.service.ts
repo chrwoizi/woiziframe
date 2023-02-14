@@ -9,6 +9,8 @@ export class GarbageService {
   constructor(private http: HttpClient) {}
 
   async get(): Promise<GarbageDisposal> {
-    return await this.http.get<GarbageDisposal>(`/api/garbage`).toPromise();
+    return (await this.http
+      .get<GarbageDisposal>(`/api/garbage`)
+      .toPromise()) as GarbageDisposal;
   }
 }

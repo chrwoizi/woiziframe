@@ -9,6 +9,8 @@ export class WeatherService {
   constructor(private http: HttpClient) {}
 
   async get(): Promise<Weather> {
-    return await this.http.get<Weather>(`/api/weather`).toPromise();
+    return (await this.http
+      .get<Weather>(`/api/weather`)
+      .toPromise()) as Weather;
   }
 }

@@ -14,7 +14,7 @@ export class ScreenService {
         const response = await this.http
           .get<{ on: boolean }>(environment.screenStatusUrl)
           .toPromise();
-        return response.on;
+        return response!.on;
       } catch (e) {
         console.error(e);
         return true;
