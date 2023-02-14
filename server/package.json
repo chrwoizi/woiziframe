@@ -4,11 +4,12 @@
   "scripts": {
     "start": "nodemon",
     "start:prod": "node dist/server/src/server.js",
-    "build": "tsc && cp -r res ./dist/",
+    "build": "tsc && cp -r res ./dist/server/",
     "add-calendar": "ts-node src/add-calendar.ts"
   },
   "private": true,
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "googleapis": "^77.0.0",
     "moment-timezone": "^0.5.33",

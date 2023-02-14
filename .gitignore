@@ -45,5 +45,6 @@ testem.log
 Thumbs.db
 
 # Secrets
-*.secret.*
-/private
+.dev.secret.env
+.prod.env
+.prod.secret.env

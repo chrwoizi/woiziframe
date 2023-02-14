@@ -30,6 +30,22 @@ function saveTokens(tokens) {
  */
 export function getAuthorizationUrl(redirect: string) {
   console.log('google.auth.OAuth2.generateAuthUrl', redirect);
+  console.log(
+    `googleCalendarClientId: ${environment.calendar.googleCalendarClientId.substring(
+      0,
+      5
+    )}...${environment.calendar.googleCalendarClientId.substring(
+      environment.calendar.googleCalendarClientId.length - 5
+    )}`
+  );
+  console.log(
+    `googleCalendarClientSecret: ${environment.calendar.googleCalendarClientSecret.substring(
+      0,
+      5
+    )}...${environment.calendar.googleCalendarClientSecret.substring(
+      environment.calendar.googleCalendarClientSecret.length - 5
+    )}`
+  );
   const oAuth2Client = new google.auth.OAuth2(
     environment.calendar.googleCalendarClientId,
     environment.calendar.googleCalendarClientSecret,

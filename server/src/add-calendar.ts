@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import * as request from 'request';
-import { environment } from './environments/environment.prod';
+import { environment } from './environments/environment';
 
 const redirect = `http://${
   environment.host === '0.0.0.0' || environment.host === '127.0.0.1'
