@@ -1,8 +1,5 @@
 FROM node:lts as server-builder
 
-RUN apt-get update
-RUN apt-get install -y unattended-upgrades
-
 COPY server/package.json server/package-lock.json /server/
 WORKDIR /server
 RUN npm ci
@@ -24,6 +21,9 @@ RUN npm run build
 
 
 FROM node:lts
+
+RUN apt-get update
+RUN apt-get install -y unattended-upgrades
 
 COPY --from=server-builder /server/dist /woiziframe
 COPY --from=server-builder /server/node_modules /woiziframe/node_modules
