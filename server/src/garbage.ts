@@ -11,8 +11,9 @@ export async function loadGarbage(): Promise<GarbageDisposal> {
   }
 
   const url =
-    'https://www.aha-region.de/abholtermine/abfuhrkalender?gemeinde=Uetze&von=I&bis=J';
+    'https://www.aha-region.de/abholtermine/abfuhrkalender?gemeinde=' + environment.garbage.garbageQueryString.gemeinde + '&von=' + environment.garbage.garbageQueryString.von + '&bis=' + environment.garbage.garbageQueryString.bis;
   console.log(url);
+  console.log(environment.garbage.garbageFormData);
   const html = await request(url, {
     method: 'POST',
     form: environment.garbage.garbageFormData,
@@ -20,21 +21,28 @@ export async function loadGarbage(): Promise<GarbageDisposal> {
 
   const root = parse(html);
 
-  const th = root
-    .querySelectorAll('th')
-    .find((x) => x.innerText === 'Abholungen');
-  const tbody = th.parentNode.parentNode;
+  try {
+    const th = root
+      .querySelectorAll('th')
+      .find((x) => x.innerText === 'Abholungen');
+    const tbody = th.parentNode.parentNode;
 
-  let events = [
-    ...parseEvents(tbody, 'Restabfall', 'misc'),
-    ...parseEvents(tbody, 'Bioabfall', 'organic'),
-    ...parseEvents(tbody, 'Papier', 'paper'),
-    ...parseEvents(tbody, 'Leichtverpackungen', 'packaging'),
-  ];
+    let events = [
+      ...parseEvents(tbody, 'Restabfall', 'misc'),
+      ...parseEvents(tbody, 'Bioabfall', 'organic'),
+      ...parseEvents(tbody, 'Papier', 'paper'),
+      ...parseEvents(tbody, 'Leichtverpackungen', 'packaging'),
+    ];
 
-  return {
-    events: events,
-  } as GarbageDisposal;
+    return {
+      events: events,
+    } as GarbageDisposal;
+  }
+  catch (e) {
+    //console.log(html);
+    console.error(e);
+    throw e;
+  }
 }
 
 function parseEvents(
@@ -45,6 +53,9 @@ function parseEvents(
   const strong = tbody
     .querySelectorAll('strong')
     .find((x) => x.innerText === text);
+  if (!strong) {
+    return [];
+  }
   const tr = strong.parentNode.parentNode;
   const eventsTr = tr.nextElementSibling;
   const td = eventsTr.querySelectorAll('td')[1];

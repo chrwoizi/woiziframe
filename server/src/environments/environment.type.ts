@@ -30,14 +30,18 @@ export interface Environment {
   garbage?: {
     enabled: boolean;
     mockGarbage?: boolean;
-    garbageFormData?: {
-      aktion: string;
+    garbageQueryString?: {
       gemeinde: string;
       von: string;
       bis: string;
+    };
+    garbageFormData?: {
+      gemeinde: string;
+      jsaus: string;
       strasse: string;
       hausnr: string;
-      ladeort: string;
+      hausnraddon: string;
+      anzeigen: string;
     };
   };
 

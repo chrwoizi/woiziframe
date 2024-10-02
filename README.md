@@ -84,7 +84,6 @@ Configuration is pulled from (in order):
 | GARBAGE_STREET_LETTER           | See the payload of the abfuhrkalender endpoint                                                             |               |
 | GARBAGE_STREET_CODE             | See the payload of the abfuhrkalender endpoint                                                             |               |
 | GARBAGE_HOUSE_NUMBER            | See the payload of the abfuhrkalender endpoint                                                             |               |
-| GARBAGE_PICKUP_LOCATION_CODE    | See the payload of the abfuhrkalender endpoint                                                             |               |
 | WEATHER_ENABLED                 | Query openweathermap.org for weather information                                                           | false         |
 | WEATHER_MOCK                    | Use weather mock data                                                                                      |               |
 | OPEN_WEATHER_API_KEY            | The openweathermap.org API key. Generate a new one at https://openweathermap.org/appid                     |               |
