@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { environment } from './environments/environment.dev';
+import { environment } from './environments/environment';
 
 export interface ScreenSwitchResult {
   isDelayed: boolean;

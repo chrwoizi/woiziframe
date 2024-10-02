@@ -1,14 +1,8 @@
 export class GpioMock {
   value?: boolean;
-  setMode(mode) {}
-  setup(pin, direction, onSetup) {
-    onSetup(null, null);
+  getInstantLineValue(device, pin) {
+    return this.value ? 1 : 0;
   }
-  read(channel, cb) {
-    cb(null, this.value);
-  }
-  MODE_RPI: undefined;
-  DIR_IN: undefined;
 }
 
 export const gpioMock = new GpioMock();
