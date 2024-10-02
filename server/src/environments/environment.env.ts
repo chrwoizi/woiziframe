@@ -84,16 +84,20 @@ export const environment: Environment = {
       !process.env.GARBAGE_ENABLED || process.env.GARBAGE_ENABLED === 'true',
     mockGarbage:
       !process.env.DIRECTIONS_MOCK || process.env.GARBAGE_MOCK === 'true',
-    garbageFormData: {
-      aktion: 'Abfuhrtermine',
+    garbageQueryString: {
       gemeinde: process.env.GARBAGE_MUNICIPALITY,
       von: process.env.GARBAGE_STREET_LETTER,
       bis: String.fromCharCode(
         process.env.GARBAGE_STREET_LETTER.charCodeAt(0) + 1
       ),
+    },
+    garbageFormData: {
+      gemeinde: process.env.GARBAGE_MUNICIPALITY,
+      jsaus: '',
       strasse: process.env.GARBAGE_STREET_CODE,
       hausnr: process.env.GARBAGE_HOUSE_NUMBER,
-      ladeort: process.env.GARBAGE_PICKUP_LOCATION_CODE,
+      hausnraddon: '',
+      anzeigen: 'Suchen',
     },
   },
 
