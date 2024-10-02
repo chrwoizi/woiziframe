@@ -1,11 +1,14 @@
-import * as gpio from 'rpi-gpio';
 import { EventEmitter } from 'events';
 import { environment } from './environments/environment';
 import { gpioMock } from './GpioMock';
+var gpiod = require('node-libgpiod');
 
-const g = environment.mockSensor ? gpioMock : gpio;
+const g = environment.mockSensor ? gpioMock : gpiod;
 if (environment.mockSensor) {
   console.log('mocking gpio');
+}
+else {
+  console.log('using gpio');
 }
 
 export class Sensor extends EventEmitter {
@@ -14,7 +17,7 @@ export class Sensor extends EventEmitter {
 
   private interval?: NodeJS.Timeout = undefined;
 
-  constructor(private pin: number, private loop = 1500) {
+  constructor(private device: string, private pin: number, private loop = 1500) {
     super();
 
     this.movement = false;
@@ -22,22 +25,8 @@ export class Sensor extends EventEmitter {
     this.interval = undefined;
   }
 
-  async start(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      g.setMode(g.MODE_RPI);
-
-      g.setup(this.pin, g.DIR_IN, (err?: Error | null, value?: boolean) => {
-        if (err) {
-          reject(err);
-          return undefined;
-        }
-
-        this.interval = setInterval(() => this.readPir(), this.loop);
-        resolve();
-
-        return this.interval;
-      });
-    });
+  async start() {
+    this.interval = setInterval(() => this.readPir(), this.loop);
   }
 
   stop() {
@@ -52,24 +41,19 @@ export class Sensor extends EventEmitter {
   }
 
   readPir() {
-    g.read(this.pin, (err?: Error | null, value?: boolean) => {
-      if (err) {
-        console.error(err);
-      }
+    const value = g.getInstantLineValue(this.device, this.pin) == 1 ? true : false;
+    if (value === this.movement) {
+      return;
+    }
 
-      if (value === this.movement) {
-        return;
-      }
+    this.movement = value;
 
-      this.movement = value;
-
-      if (this.movement === true) {
-        this.lastMovement = new Date();
-        this.emit('movement');
-      } else if (this.movement === false) {
-        this.lastMovement = new Date();
-        this.emit('stillness');
-      }
-    });
+    if (this.movement === true) {
+      this.lastMovement = new Date();
+      this.emit('movement');
+    } else if (this.movement === false) {
+      this.lastMovement = new Date();
+      this.emit('stillness');
+    }
   }
 }

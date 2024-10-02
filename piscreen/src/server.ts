@@ -12,6 +12,8 @@ console.log = (...args) => {
   log(new Date().toISOString(), ...args);
 };
 
+console.log('prod: ', environment.production);
+
 server.use(bodyParser.json());
 
 let isOn = false;
@@ -54,6 +56,7 @@ server.listen(environment.port, environment.host);
 (async () => {
   try {
     const sensor = new Sensor(
+      environment.sensorDevice,
       environment.sensorPin,
       environment.sensorInterval
     );
@@ -74,15 +77,13 @@ server.listen(environment.port, environment.host);
       });
     });
 
-    console.log('initializing sensor on pin ' + environment.sensorPin);
-    await sensor.start();
-    console.log('sensor is ready');
+    sensor.start();
   } catch (e) {
     console.error(e);
   }
 })();
 
-if (environment.mockSensor) {
+if (environment.mockSensor === true) {
   setInterval(
     () => (gpioMock.value = !gpioMock.value),
     environment.mockSensorInterval

@@ -3,6 +3,7 @@ export interface Environment {
   host: string;
   port: number;
   minOnDuration: number;
+  sensorDevice: string;
   sensorPin: number;
   sensorInterval: number;
   mockSensor: boolean;
