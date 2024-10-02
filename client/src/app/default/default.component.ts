@@ -40,4 +40,10 @@ export class DefaultComponent {
       this.cursor = 'none';
     }, 1000);
   }
+
+  onClick() {
+    if (!this.showFullScreenButton) {
+      this.toggleFullScreen();
+    }
+  }
 }
