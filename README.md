@@ -22,7 +22,7 @@ Features:
 
   - The current weather and tomorrow's weather as icon, temperature, and rain. (OpenWeatherMap)
 
-  - Calendar events. To connect to a Google Calendar run `npm run add-calendar` in the `server` directory.
+  - Calendar events. See the Google Calendar section below.
 
   - The driving duration and public transit duration to calendar event locations and to daily recurring destinations, e.g. the workplace. (Google Directions API)
 
@@ -93,3 +93,8 @@ Configuration is pulled from (in order):
 Run `cd client; npm start` for a dev frontend server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 Run `cd server; npm start` for a backend server. Navigate to `http://localhost:4201/api/albums` or `http://localhost:4201/api/files?album=[albumname]` or `http://localhost:4201/api/file/[albumname]/[filename]`.
+
+## Google Calendar
+
+To connect to a Google Calendar in the development environment, run `npm run add-calendar` in the `server` directory.
+To connect to a Google Calendar in the production environment, open `http://[your server name]/api/calendar/auth?redirect=http%3A%2F%2Flocalhost%3A4201%2Fapi%2Fcalendar%2Fconfirm`, then copy the shown url into a browser and follow the instructions. At the end, you will be redirected to localhost. Replace localhost with the hostname of the server. If you have a commercial license, you can use the `redirect` parameter to redirect to your actual url.

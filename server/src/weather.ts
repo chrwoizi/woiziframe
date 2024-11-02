@@ -8,7 +8,7 @@ export async function loadWeather(): Promise<Weather> {
     return mock;
   }
 
-  const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${environment.locationLatitude}&lon=${environment.locationLongitude}&units=metric&lang=${environment.locale}&appid=${environment.weather.openWeatherApiKey}`;
+  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${environment.locationLatitude}&lon=${environment.locationLongitude}&units=metric&lang=${environment.locale}&appid=${environment.weather.openWeatherApiKey}`;
   console.log(
     url.substr(0, url.length - environment.weather.openWeatherApiKey.length)
   );
