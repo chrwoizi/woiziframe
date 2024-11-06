@@ -1,5 +1,5 @@
-<div class="page" [style.cursor]="cursor" (mousemove)="onMouseMove()" (click)="onClick()">
-  <app-photo></app-photo>
+<div class="page" [style.cursor]="cursor" (mousemove)="onMouseMove()" (click)="onClick($event)">
+  <app-photo #photo></app-photo>
   <app-clock></app-clock>
   <app-weather></app-weather>
   <app-calendar></app-calendar>

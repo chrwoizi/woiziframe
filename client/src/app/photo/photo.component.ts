@@ -45,7 +45,7 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit() {
     this.refreshInterval = setInterval(
       () => this.photoStoreService.reloadStore(),
-      environment.garbageRefreshIntervalMinutes * 60 * 1000
+      environment.photoRefreshIntervalMinutes * 60 * 1000
     );
   }
 
@@ -186,7 +186,7 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
     } else {
       this.activeItem = this.item1;
     }
-
+    
     const item = this.getNewPhoto();
     if (item) {
       if (this.activeItem === this.item1) {
@@ -201,7 +201,7 @@ export class PhotoComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private nextItemNow() {
+  public nextItemNow() {
     if (this.nextItemTimeout) {
       clearTimeout(this.nextItemTimeout);
       this.nextItemTimeout = undefined;
