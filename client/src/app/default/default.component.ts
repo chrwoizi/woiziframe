@@ -1,5 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { PhotoComponent } from '../photo/photo.component';
 
 @Component({
   selector: 'app-default',
@@ -12,6 +13,7 @@ export class DefaultComponent {
   timeout?: any;
   showFullScreenButton = environment.showFullScreenButton;
   showCloseButton = environment.showCloseButton;
+  @ViewChild('photo') photo!: PhotoComponent;
 
   close() {
     window.close();
@@ -41,9 +43,15 @@ export class DefaultComponent {
     }, 1000);
   }
 
-  onClick() {
-    if (!this.showFullScreenButton) {
-      this.toggleFullScreen();
+  onClick($event: { clientX: any; }) {
+    const x = $event.clientX;
+    const isClickOnRight = x > window.innerWidth * 0.5;
+    if (isClickOnRight) {
+      this.photo.nextItemNow();
+    } else {
+      if (!this.showFullScreenButton) {
+        this.toggleFullScreen();
+      }
     }
   }
 }
