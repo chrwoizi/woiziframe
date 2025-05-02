@@ -93,10 +93,12 @@ export const environment: Environment = {
     },
     garbageFormData: {
       gemeinde: process.env.GARBAGE_MUNICIPALITY,
-      jsaus: '',
+      aktuelle_gemeinde: process.env.GARBAGE_MUNICIPALITY,
+      von: process.env.GARBAGE_STREET_LETTER,
       strasse: process.env.GARBAGE_STREET_CODE,
       hausnr: process.env.GARBAGE_HOUSE_NUMBER,
       hausnraddon: '',
+      ladeort: process.env.GARBAGE_LOADER_PLACE,
       anzeigen: 'Suchen',
     },
   },
