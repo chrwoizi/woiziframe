@@ -37,10 +37,12 @@ export interface Environment {
     };
     garbageFormData?: {
       gemeinde: string;
-      jsaus: string;
+      aktuelle_gemeinde: string;
+      von: string;
       strasse: string;
       hausnr: string;
       hausnraddon: string;
+      ladeort: string;
       anzeigen: string;
     };
   };
