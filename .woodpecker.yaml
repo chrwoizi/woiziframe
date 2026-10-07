@@ -1,0 +1,49 @@
+# Builds the image of woiziframe and deploys it to the woizikube cluster as
+# the helm release woiziframe (chart: .pipeline/helm/woiziframe).
+#
+# The settings of the cluster for this project (namespace, registry, hosts,
+# volumes, secrets) are not part of this repository, see .pipeline/deploy.sh.
+# Before the first run:
+#   - woizikube: run "woizikube.sh prepare woiziframe"
+#   - Woodpecker: add the secret WOIZIKUBE_REGISTRY, the registry that the image is pushed to
+
+when:
+  - event: [push, manual]
+    branch: [main]
+
+labels:
+  backend: kubernetes
+
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      recursive: false
+
+steps:
+  - name: publish-image
+    image: woodpeckerci/plugin-kaniko
+    pull: true
+    settings:
+      registry:
+        from_secret: WOIZIKUBE_REGISTRY
+      repo: woiziframe-server
+      tags: ${CI_COMMIT_SHA}
+      dockerfile: Dockerfile
+      context: .
+      insecure: true
+
+  - name: deploy
+    image: alpine/helm:3.17.3
+    pull: true
+    depends_on:
+      - publish-image
+    environment:
+      RELEASE_NAME: woiziframe
+      IMAGE_TAG: ${CI_COMMIT_SHA}
+    commands:
+      - apk add --no-cache kubectl
+      - sh .pipeline/deploy.sh
+    backend_options:
+      kubernetes:
+        serviceAccountName: woodpecker-woiziframe-deployer

@@ -1,0 +1,72 @@
+# Defaults of the chart. Everything that is specific to the cluster (registry,
+# ingress, node selector, volumes, environment of the container) is not part of
+# this repository: the pipeline adds it, see .pipeline/deploy.sh.
+
+replicaCount: 1
+
+image:
+    # Registry that the cluster pulls from
+    registry: ""
+    name: woiziframe-server
+    # Replaces registry and name
+    repository: ""
+    pullPolicy: IfNotPresent
+    # Set by the pipeline to the commit that it built
+    tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+    create: true
+    annotations: {}
+    # If not set and create is true, the name of the release is used
+    name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+# The container listens on service.port
+service:
+    type: ClusterIP
+    port: 4201
+
+ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts: []
+    #    - host: example.com
+    #      paths:
+    #          - path: /
+    #            pathType: Prefix
+    tls: []
+    #    - secretName: example-com-tls
+    #      hosts:
+    #          - example.com
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Environment of the container, same syntax as in a pod spec
+env: []
+
+# The cluster provides the volumes "secrets" (writable, e.g. the calendar
+# authentication) and "pictures" (the photos) in volumes
+volumeMounts:
+    - name: secrets
+      mountPath: /woiziframe/secrets
+    - name: pictures
+      mountPath: /woiziframe/pictures
+volumes: []
+
+# Claim for the volume of the cluster
+storageName: ""
+storageClassName: ""
+storageCapacity: "1Gi"
+storageAccessMode: "ReadWriteOnce"
+storageVolumeName: ""
